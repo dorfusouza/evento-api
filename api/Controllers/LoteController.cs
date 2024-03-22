@@ -10,7 +10,7 @@ namespace api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LoteController : Controller
+    public class LoteController : ControllerBase
     {
         private readonly LoteDao _loteDao;
 

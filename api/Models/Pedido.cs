@@ -7,17 +7,17 @@ public class Pedido
     [Column("id")]
     public int IdPedido { get; set; }
 
-    [Column("usuarios")]
-    public int IdUsuarios  { get; set; }
+    [Column("usuarios_id")]
+    public int UsuariosId  { get; set; }
 
-    [Column("data_cadastro")]
+    [Column("data")]
         public DateTime DataCadastro { get; set; }
 
     [Column("total")]
         public double Total { get; set; }
 
     [Column("quantidade")]
-        public int IdQuantidade { get; set; }
+        public int Quantidade { get; set; }
 
      [Column("forma_pagamento")]
      public string? FormaPagamento { get; set; }
