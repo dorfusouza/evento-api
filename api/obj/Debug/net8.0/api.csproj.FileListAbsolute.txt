@@ -1,0 +1,8 @@
+C:\Users\biancapfuentes\Documents\GitHub\Eventos-Senai-792\api\obj\Debug\net8.0\api.csproj.AssemblyReference.cache
+C:\Users\biancapfuentes\Documents\GitHub\Eventos-Senai-792\api\obj\Debug\net8.0\api.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\biancapfuentes\Documents\GitHub\Eventos-Senai-792\api\obj\Debug\net8.0\api.AssemblyInfoInputs.cache
+C:\Users\biancapfuentes\Documents\GitHub\Eventos-Senai-792\api\obj\Debug\net8.0\api.AssemblyInfo.cs
+C:\Users\biancapfuentes\Documents\GitHub\Eventos-Senai-792\api\obj\Debug\net8.0\api.csproj.CoreCompileInputs.cache
+C:\Users\biancapfuentes\Documents\GitHub\Eventos-Senai-792\api\obj\Debug\net8.0\api.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\biancapfuentes\Documents\GitHub\Eventos-Senai-792\api\obj\Debug\net8.0\api.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\biancapfuentes\Documents\GitHub\Eventos-Senai-792\api\obj\Debug\net8.0\api.sourcelink.json
