@@ -2235,19 +2235,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Luan.Granado\\.nuget\\packages\\": {}
+    "C:\\Users\\Roger.Diegoli\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projetos\\Eventos-Senai-792\\api\\api.csproj",
+      "projectUniqueName": "C:\\Users\\Roger.Diegoli\\Desktop\\Roger\\CloneRepository\\projeto-ingresso-equipe4\\api\\api.csproj",
       "projectName": "api",
-      "projectPath": "C:\\Projetos\\Eventos-Senai-792\\api\\api.csproj",
-      "packagesPath": "C:\\Users\\Luan.Granado\\.nuget\\packages\\",
-      "outputPath": "C:\\Projetos\\Eventos-Senai-792\\api\\obj\\",
+      "projectPath": "C:\\Users\\Roger.Diegoli\\Desktop\\Roger\\CloneRepository\\projeto-ingresso-equipe4\\api\\api.csproj",
+      "packagesPath": "C:\\Users\\Roger.Diegoli\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Roger.Diegoli\\Desktop\\Roger\\CloneRepository\\projeto-ingresso-equipe4\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Luan.Granado\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Roger.Diegoli\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
