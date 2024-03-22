@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace api.Models;
+namespace api.Repository;
 
-public class Usuarios
+public class Usuario
 {
     [Column ("id")]
     public int IdUsuario { get; set; }
