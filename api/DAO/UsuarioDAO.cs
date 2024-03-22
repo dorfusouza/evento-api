@@ -27,11 +27,7 @@ namespace api.DAO
                         Usuario usuario = new Usuario();
                         usuario.IdUsuario = reader.GetInt32("id");
                         usuario.NomeCompleto = reader.GetString("nome_completo");
-<<<<<<< HEAD
-                        usuario.Senha = reader.GetSenha("senha");
-=======
                         usuario.Senha = reader.GetString("senha");
->>>>>>> cd19125c0d7dee298db1919a1121fb6082fda721
                         usuario.Email = reader.GetString("email");
                         usuario.Telefone = reader.GetInt32("telefone");
                         usuario.IsAtivo = reader.GetBoolean("status");
