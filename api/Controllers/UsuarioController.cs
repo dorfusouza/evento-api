@@ -14,7 +14,7 @@ public class UsuarioControllers : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        var usuarios = _usuarioDao.GetAll();
+        var usuarios = _usuarioDao.Get();
         return Ok(usuarios);
     }
 
@@ -34,11 +34,11 @@ public class UsuarioControllers : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public IActionResult Put(int id, [FromBody] Usuario usuarioAtualizado)
+    public IActionResult Put(int id, [FromBody] Usuario usuario)
     {
-        if (id != usuarioAtualizado.IdUsuario) return BadRequest();
+        if (id != usuario.IdUsuario) return BadRequest();
         if (_usuarioDao.GetById(id) == null) return NotFound();
-        _usuarioDao.Put(id, usuarioAtualizado);
+        _usuarioDao.Put(id, usuario);
         return NoContent();
     }
 

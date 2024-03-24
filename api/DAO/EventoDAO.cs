@@ -11,7 +11,7 @@ public class EventoDao
 
     private static List<Evento?> ReadAll(MySqlCommand command)
     {
-        var eventos = new List<Evento>();
+        var eventos = new List<Evento?>();
 
         using var reader = command.ExecuteReader();
         if (!reader.HasRows) return eventos;
@@ -37,10 +37,9 @@ public class EventoDao
         try
         {
             _connection.Open();
-            const string query = "SELECT * FROM eventos";
+            const string query = "SELECT * FROM evento";
 
             var command = new MySqlCommand(query, _connection);
-            using var reader = command.ExecuteReader();
 
             eventos = ReadAll(command);
         }
@@ -69,9 +68,10 @@ public class EventoDao
         try
         {
             _connection.Open();
-            var query = $"SELECT * FROM db_evento.evento Where id = {id}";
+            var query = "SELECT * FROM db_evento.evento Where id = @Id";
 
             var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@Id", id);
 
             evento = ReadAll(command).FirstOrDefault();
         }
@@ -94,20 +94,21 @@ public class EventoDao
         return evento;
     }
 
-    public void CriarEvento(Evento evento)
+    public void Set(Evento evento)
     {
         try
         {
             _connection.Open();
             const string query = "INSERT INTO evento (id, descricao, data_evento, total_ingressos)" +
-                                 "values(@Id,  @Descricao, @DataEvento, @TotalIngressos)";
+                                 "VALUES(@Id,  @Descricao, @DataEvento, @TotalIngressos)";
 
             using var command = new MySqlCommand(query, _connection);
-
             command.Parameters.AddWithValue("@Id", evento.IdEvento);
             command.Parameters.AddWithValue("@Descricao", evento.Descricao);
             command.Parameters.AddWithValue("@DataEvento", evento.DataEvento);
             command.Parameters.AddWithValue("@TotalIngressos", evento.TotalIngressos);
+
+            command.ExecuteNonQuery();
         }
         catch (MySqlException ex)
         {
@@ -125,17 +126,16 @@ public class EventoDao
         }
     }
 
-    public void AtualizarEvento(int id, Evento evento)
+    public void Put(int id, Evento evento)
     {
         try
         {
             _connection.Open();
-            const string query = "UPDATE evento SET" +
-                                 "id=@Id," +
-                                 "descricao=@Descricao," +
-                                 "data_evento=@DataEvento," +
-                                 "total_ingressos=@TotalIngressos," +
-                                 "WHERE id=@Id";
+            const string query = "UPDATE evento SET " +
+                                 "descricao = @Descricao, " +
+                                 "data_evento = @DataEvento, " +
+                                 "total_ingressos = @TotalIngressos " +
+                                 "WHERE id = @Id";
 
             using var command = new MySqlCommand(query, _connection);
 

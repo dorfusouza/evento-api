@@ -37,8 +37,7 @@ public class IngressoController : ControllerBase
     public IActionResult Put(int id, Ingresso ingresso)
     {
         if (id != ingresso.IdIngresso) return BadRequest();
-        var exists = _ingressoDao.GetById(id);
-        if (exists == null) return NotFound();
+        if (_ingressoDao.GetById(id) == null) return NotFound();
         _ingressoDao.Put(ingresso);
         return NoContent();
     }
@@ -46,8 +45,7 @@ public class IngressoController : ControllerBase
     [HttpDelete("{id:int}")]
     public IActionResult DeletarIngresso(int id)
     {
-        var ingresso = _ingressoDao.GetById(id);
-        if (ingresso == null) return NotFound();
+        if (_ingressoDao.GetById(id) == null) return NotFound();
         _ingressoDao.Delete(id);
         return NoContent();
     }

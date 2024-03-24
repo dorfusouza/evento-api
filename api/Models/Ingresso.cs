@@ -4,17 +4,24 @@ public class Ingresso
 {
     // Pega os valores da tabela Ingresso
 
-    [Column("id")] public required int IdIngresso { get; set; }
+    [Column("id")]
+    public required int IdIngresso { get; set; }
 
-    [Column("pedidos_id")] public required int PedidosId { get; set; }
+    [Column("pedidos_id")]
+    public required int PedidosId { get; set; }
 
-    [Column("pedidos_usuarios_id")] public required int PedidosUsuariosId { get; set; }
+    [Column("pedidos_usuarios_id")]
+    public required int PedidosUsuariosId { get; set; }
 
-    [Column("lote_id")] public required int LoteId { get; set; }
+    [Column("lote_id")]
+    public required int LoteId { get; set; }
 
-    [Column("valor")] public required double Valor { get; set; }
+    [Column("valor")]
+    public required double Valor { get; set; }
 
-    [Column("status")] public string? Status { get; set; }
+    [Column("status")]
+    public string? Status { get; set; }
 
-    [Column("tipo")] public required string Tipo { get; set; }
+    [Column("tipo")]
+    public required string Tipo { get; set; }
 }

@@ -62,7 +62,7 @@ public class LoteDao
 
     public Lote? GetById(int id)
     {
-        Lote? lote = null!;
+        Lote? lote;
         try
         {
             _connection.Open();
@@ -96,14 +96,15 @@ public class LoteDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total) " +
-                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total)";
+            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total, saldo) " +
+                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo)";
 
             var command = new MySqlCommand(query, _connection);
 
             command.Parameters.AddWithValue("@evento_id", lote.EventoId);
             command.Parameters.AddWithValue("@valor_unitario", lote.ValorUnitario);
             command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
+            command.Parameters.AddWithValue("@saldo", lote.Saldo);
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)

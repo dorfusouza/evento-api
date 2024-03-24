@@ -37,8 +37,7 @@ public class LoteController : ControllerBase
     public IActionResult Put(int id, [FromBody] Lote lote)
     {
         if (id != lote.IdLote) return BadRequest();
-        var exists = _loteDao.GetById(id);
-        if (exists == null) return NotFound();
+        if (_loteDao.GetById(id) == null) return NotFound();
         _loteDao.Put(lote);
         return NoContent();
     }
@@ -46,9 +45,8 @@ public class LoteController : ControllerBase
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {
-        var lote = _loteDao.GetById(id);
-        if (lote == null) return NotFound();
-        _loteDao.Delete(lote.IdLote);
+        if (_loteDao.GetById(id) == null) return NotFound();
+        _loteDao.Delete(id);
         return NoContent();
     }
 }

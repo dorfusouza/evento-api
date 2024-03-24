@@ -92,7 +92,7 @@ public class IngressoDao
 
     public Ingresso? GetById(int id)
     {
-        Ingresso? ingresso = null!;
+        Ingresso? ingresso;
         try
         {
             _connection.Open();

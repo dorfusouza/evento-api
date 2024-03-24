@@ -9,9 +9,9 @@ public class UsuarioDao
         _connection = MySqlConnectionFactory.GetConnection();
     }
 
-    private static List<Usuario> ReadAll(MySqlCommand command)
+    private static List<Usuario?> ReadAll(MySqlCommand command)
     {
-        var usuarios = new List<Usuario>();
+        var usuarios = new List<Usuario?>();
 
         using var reader = command.ExecuteReader();
         if (!reader.HasRows) return usuarios;
@@ -33,9 +33,9 @@ public class UsuarioDao
         return usuarios;
     }
 
-    public List<Usuario> GetAll()
+    public List<Usuario?> Get()
     {
-        var usuarios = new List<Usuario>();
+        var usuarios = new List<Usuario?>();
 
         try
         {
@@ -127,13 +127,13 @@ public class UsuarioDao
         {
             _connection.Open();
             const string query = "UPDATE usuarios SET " +
-                                    "nome_completo = @nome_completo, " +
-                                    "email = @email, " +
-                                    "senha = @senha, " +
-                                    "telefone = @telefone, " +
-                                    "perfil = @perfil, " +
-                                    "status = @status " +
-                                    "WHERE id = @id";
+                                 "nome_completo = @nome_completo, " +
+                                 "email = @email, " +
+                                 "senha = @senha, " +
+                                 "telefone = @telefone, " +
+                                 "perfil = @perfil, " +
+                                 "status = @status " +
+                                 "WHERE id = @id";
 
             using var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@nome_completo", usuario.NomeCompleto);

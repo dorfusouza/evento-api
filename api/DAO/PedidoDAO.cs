@@ -36,7 +36,7 @@ public class PedidoDao
 
     public List<Pedido?> Get()
     {
-        var pedidos = new List<Pedido?>();
+        List<Pedido?> pedidos;
         try
         {
             _connection.Open();
@@ -64,7 +64,7 @@ public class PedidoDao
 
     public Pedido? GetById(int id)
     {
-        Pedido? pedido = null!;
+        Pedido? pedido;
         try
         {
             _connection.Open();
@@ -132,14 +132,14 @@ public class PedidoDao
         {
             _connection.Open();
             const string query = "UPDATE pedidos SET " +
-                                    "usuarios_id = @usuarios_id, " +
-                                    "data = @data_cadastro, " +
-                                    "total = @total, " +
-                                    "quantidade = @quantidade, " +
-                                    "forma_pagamento = @forma_pagamento, " +
-                                    "status = @status, " +
-                                    "validacao_id_usuario = @validacao_id_usuario " +
-                                    "WHERE id = @id";
+                                 "usuarios_id = @usuarios_id, " +
+                                 "data = @data_cadastro, " +
+                                 "total = @total, " +
+                                 "quantidade = @quantidade, " +
+                                 "forma_pagamento = @forma_pagamento, " +
+                                 "status = @status, " +
+                                 "validacao_id_usuario = @validacao_id_usuario " +
+                                 "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@usuarios_id", pedido.UsuariosId);
@@ -174,7 +174,7 @@ public class PedidoDao
         {
             _connection.Open();
 
-            var query = "DELETE FROM pedido WHERE id = @id";
+            var query = "DELETE FROM pedidos WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@id", id);

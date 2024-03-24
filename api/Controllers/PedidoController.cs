@@ -37,8 +37,7 @@ public class PedidoController : ControllerBase
     public IActionResult Put(int id, [FromBody] Pedido pedido)
     {
         if (id != pedido.IdPedido) return BadRequest();
-        var exists = _pedidoDao.GetById(id);
-        if (exists == null) return NotFound();
+        if (_pedidoDao.GetById(id) == null) return NotFound();
         _pedidoDao.Put(pedido);
         return NoContent();
     }
@@ -46,8 +45,7 @@ public class PedidoController : ControllerBase
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {
-        var exists = _pedidoDao.GetById(id);
-        if (exists == null) return NotFound();
+        if (_pedidoDao.GetById(id) == null) return NotFound();
         _pedidoDao.Delete(id);
         return NoContent();
     }
