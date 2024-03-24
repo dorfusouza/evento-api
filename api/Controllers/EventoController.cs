@@ -1,68 +1,53 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using api.DAO;
-using api.Models;
+namespace api.Controllers;
 
-namespace api.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class EventoController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class EventoController : ControllerBase
+    private readonly EventoDao _eventoDao;
+
+    public EventoController()
     {
-        private EventoDAO _eventoDAO;
+        _eventoDao = new EventoDao();
+    }
 
-        public EventoController()
-        {
-            _eventoDAO = new EventoDAO();
+    [HttpGet]
+    public IActionResult Get()
+    {
+        var eventos = _eventoDao.Get();
+        return Ok(eventos);
+    }
 
-        }
-         public IActionResult Get()
-        {
-            var eventos = _eventoDAO.GetAll();
-            return Ok(eventos);
-        }
+    [HttpGet("{id:int}")]
+    public IActionResult GetById(int id)
+    {
+        var eventos = _eventoDao.GetById(id);
+        if (eventos == null) return NotFound();
+        return Ok(eventos);
+    }
 
-         [HttpGet("{id}")]
-        public IActionResult GetId(int id)
-        {
-           var eventos = _eventoDAO.GetId(id);
-            if( eventos == null)
-            {
-                return NotFound();
-            }
-            return Ok(eventos);
-        }
+    [HttpPost]
+    public IActionResult Set(Evento evento)
+    {
+        _eventoDao.CriarEvento(evento);
+        return CreatedAtAction(nameof(GetById), new { id = evento.IdEvento }, evento);
+    }
 
-         [HttpPost]
-        public IActionResult CriarEvento(Evento evento)
-        {
-            _eventoDAO.CriarEvento(evento);
-            return Ok();
-        }
+    [HttpPut("{id:int}")]
+    public IActionResult Put(int id, Evento evento)
+    {
+        if (id != evento.IdEvento) return BadRequest();
+        var exists = _eventoDao.GetById(id);
+        if (exists == null) return NotFound();
+        _eventoDao.AtualizarEvento(id, evento);
+        return NoContent();
+    }
 
-                [HttpPost("{id}")]
-        public IActionResult AtualizarEvento(int id, Evento evento)
-        {
-            if(_eventoDAO.GetId(id) == null)
-            {
-                return NotFound();
-            }
-            _eventoDAO.AtualizarEvento(id, evento);
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeletarEvento(int id)
-        {
-            if(_eventoDAO.GetId(id) == null)
-            {
-                return NotFound();
-            }
-            _eventoDAO.DeleteEvento(id);
-            return Ok();
-        }
+    [HttpDelete("{id:int}")]
+    public IActionResult Delete(int id)
+    {
+        if (_eventoDao.GetById(id) == null) return NotFound();
+        _eventoDao.DeleteEvento(id);
+        return Ok();
     }
 }

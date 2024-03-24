@@ -1,96 +1,93 @@
-﻿using api.Models;
-using api.Repository;
-using MySql.Data.MySqlClient;
-
-namespace api.DAO;
+﻿namespace api.DAO;
 
 public class LoteDao
 {
-    private MySqlConnection _connection;
+    private readonly MySqlConnection _connection;
 
     public LoteDao()
     {
         _connection = MySqlConnectionFactory.GetConnection();
     }
 
-    private static List<Lote> ReadAll(MySqlCommand command)
+    private static List<Lote?> ReadAll(MySqlCommand command)
     {
-        var lotes = new List<Lote>();
+        var lotes = new List<Lote?>();
 
-        using (var reader = command.ExecuteReader())
+        using var reader = command.ExecuteReader();
+        if (!reader.HasRows) return lotes;
+        while (reader.Read())
         {
-            if (!reader.HasRows) return lotes;
-            while (reader.Read())
+            var lote = new Lote
             {
-                var lote = new Lote
-                {
-                    IdLote = reader.GetInt32("id"),
-                    EventoId = reader.GetInt32("evento_id"),
-                    ValorUnitario = reader.GetDouble("valor_unitario"),
-                    Saldo = reader.GetInt32("quantidade_total")
-                };
-                lotes.Add(lote);
-            }
+                IdLote = reader.GetInt32("id"),
+                EventoId = reader.GetInt32("evento_id"),
+                ValorUnitario = reader.GetDouble("valor_unitario"),
+                QuantidadeTotal = reader.GetInt32("quantidade_total"),
+                Saldo = reader.GetInt32("quantidade_total")
+            };
+            lotes.Add(lote);
         }
+
         return lotes;
     }
 
-    public List<Lote> Get()
+    public List<Lote?> Get()
     {
-        var lotes = new List<Lote>();
+        List<Lote?> lotes;
         try
         {
             _connection.Open();
             const string query = "SELECT * FROM lote";
+
             var command = new MySqlCommand(query, _connection);
             lotes = ReadAll(command);
-        } catch (MySqlException e)
+        }
+        catch (MySqlException e)
         {
             Console.WriteLine(e);
             throw;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
-        } finally
+        }
+        finally
         {
             _connection.Close();
         }
+
         return lotes;
     }
 
     public Lote? GetById(int id)
     {
-        Lote lote = null;
+        Lote? lote = null!;
         try
         {
             _connection.Open();
             const string query = "SELECT * FROM lote WHERE id = @id";
+
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@id", id);
-            var reader = command.ExecuteReader();
-            if (reader.Read())
-            {
-                lote = new Lote
-                {
-                    IdLote = reader.GetInt32("id"),
-                    EventoId = reader.GetInt32("evento_id"),
-                    ValorUnitario = reader.GetDouble("valor_unitario"),
-                    Saldo = reader.GetInt32("quantidade_total")
-                };
-            }
-        } catch (MySqlException e)
+
+            lote = ReadAll(command).FirstOrDefault();
+        }
+        catch (MySqlException e)
         {
             Console.WriteLine(e);
             throw;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
-        } finally
+        }
+        finally
         {
             _connection.Close();
         }
+
         return lote;
     }
 
@@ -99,21 +96,27 @@ public class LoteDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total) VALUES (@evento_id, @valor_unitario, @quantidade_total)";
+            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total) " +
+                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total)";
+
             var command = new MySqlCommand(query, _connection);
+
             command.Parameters.AddWithValue("@evento_id", lote.EventoId);
             command.Parameters.AddWithValue("@valor_unitario", lote.ValorUnitario);
             command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
             command.ExecuteNonQuery();
-        } catch (MySqlException e)
+        }
+        catch (MySqlException e)
         {
             Console.WriteLine(e);
             throw;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
-        } finally
+        }
+        finally
         {
             _connection.Close();
         }
@@ -124,45 +127,58 @@ public class LoteDao
         try
         {
             _connection.Open();
-            const string query = "UPDATE lote SET evento_id = @evento_id, valor_unitario = @valor_unitario, quantidade_total = @quantidade_total WHERE id = @id";
+            const string query = "UPDATE lote SET " +
+                                 "evento_id = @evento_id, " +
+                                 "valor_unitario = @valor_unitario, " +
+                                 "quantidade_total = @quantidade_total " +
+                                 "WHERE id = @id";
+
             var command = new MySqlCommand(query, _connection);
+
             command.Parameters.AddWithValue("@evento_id", lote.EventoId);
             command.Parameters.AddWithValue("@valor_unitario", lote.ValorUnitario);
             command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
             command.Parameters.AddWithValue("@id", lote.IdLote);
             command.ExecuteNonQuery();
-        } catch (MySqlException e)
+        }
+        catch (MySqlException e)
         {
             Console.WriteLine(e);
             throw;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
-        } finally
+        }
+        finally
         {
             _connection.Close();
         }
     }
 
-    public void Delete(int IdLote)
+    public void Delete(int idLote)
     {
         try
         {
             _connection.Open();
             const string query = "DELETE FROM lote WHERE id = @id";
+
             var command = new MySqlCommand(query, _connection);
-            command.Parameters.AddWithValue("@id", IdLote);
+            command.Parameters.AddWithValue("@id", idLote);
             command.ExecuteNonQuery();
-        } catch (MySqlException e)
+        }
+        catch (MySqlException e)
         {
             Console.WriteLine(e);
             throw;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
-        } finally
+        }
+        finally
         {
             _connection.Close();
         }

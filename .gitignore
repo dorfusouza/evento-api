@@ -10,3 +10,10 @@ api/obj/project.nuget.cache
 api/obj/Debug/net8.0/api.GeneratedMSBuildEditorConfig.editorconfig
 api/obj/Debug/net8.0/api.csproj.AssemblyReference.cache
 api/obj/Debug/net8.0/api.assets.cache
+/.idea
+api/api.csproj
+*.json
+*.dll
+/api/bin
+/api/obj
+/api/Properties
