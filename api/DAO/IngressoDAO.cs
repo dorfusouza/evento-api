@@ -25,7 +25,8 @@ public class IngressoDao
                 PedidosUsuariosId = reader.GetInt32("pedidos_usuarios_id"),
                 Status = reader.GetString("status"),
                 Tipo = reader.GetString("tipo"),
-                Valor = reader.GetDouble("valor")
+                Valor = reader.GetDouble("valor"),
+                DataUtilizacao = reader.GetDateTime("data_utilizacao")
             };
             ingressos.Add(ingresso);
         }
@@ -61,7 +62,7 @@ public class IngressoDao
         return ingressos;
     }
 
-    public List<Ingresso?> GetByPedidoId(int pedidoId)
+    public List<Ingresso?> ReadByPedidoId(int pedidoId)
     {
         List<Ingresso?> ingressos;
         try
@@ -126,8 +127,8 @@ public class IngressoDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO ingressos (lote_id, pedidos_id, pedidos_usuarios_id, status, tipo, valor) " +
-                                 "VALUES (@lote_id, @pedidos_id, @pedidos_usuarios_id, @status, @tipo, @valor)";
+            const string query = "INSERT INTO ingressos (lote_id, pedidos_id, pedidos_usuarios_id, status, tipo, valor, data_utilizacao) " +
+                                 "VALUES (@lote_id, @pedidos_id, @pedidos_usuarios_id, @status, @tipo, @valor, @data_utilizacao)";
 
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@lote_id", ingresso.LoteId);
@@ -136,6 +137,7 @@ public class IngressoDao
             command.Parameters.AddWithValue("@status", ingresso.Status);
             command.Parameters.AddWithValue("@tipo", ingresso.Tipo);
             command.Parameters.AddWithValue("@valor", ingresso.Valor);
+            command.Parameters.AddWithValue("@data_utilizacao", ingresso.DataUtilizacao);
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)
@@ -165,7 +167,8 @@ public class IngressoDao
                                  "pedidos_usuarios_id = @pedidos_usuarios_id, " +
                                  "status = @status, " +
                                  "tipo = @tipo, " +
-                                 "valor = @valor " +
+                                 "valor = @valor, " +
+                                 "data_utilizacao = @data_utilizacao " +
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
@@ -175,6 +178,7 @@ public class IngressoDao
             command.Parameters.AddWithValue("@status", ingresso.Status);
             command.Parameters.AddWithValue("@tipo", ingresso.Tipo);
             command.Parameters.AddWithValue("@valor", ingresso.Valor);
+            command.Parameters.AddWithValue("@data_utilizacao", ingresso.DataUtilizacao);
             command.Parameters.AddWithValue("@id", ingresso.IdIngresso);
             command.ExecuteNonQuery();
         }

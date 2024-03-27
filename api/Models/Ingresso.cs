@@ -24,4 +24,7 @@ public class Ingresso
 
     [Column("tipo")]
     public required string Tipo { get; set; }
+
+    [Column("data_utilizacao")]
+    public DateTime? DataUtilizacao { get; set; }
 }

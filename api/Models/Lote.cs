@@ -16,4 +16,10 @@ public class Lote
 
     [Column("saldo")]
     public required int Saldo { get; set; }
+
+    [Column("descricao")]
+    public string? Descricao { get; set; }
+
+    [Column("ativo")]
+    public required int Ativo { get; set; }
 }

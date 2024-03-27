@@ -23,7 +23,8 @@ public class LoteDao
                 EventoId = reader.GetInt32("evento_id"),
                 ValorUnitario = reader.GetDouble("valor_unitario"),
                 QuantidadeTotal = reader.GetInt32("quantidade_total"),
-                Saldo = reader.GetInt32("quantidade_total")
+                Saldo = reader.GetInt32("quantidade_total"),
+                Ativo = reader.GetInt32("ativo")
             };
             lotes.Add(lote);
         }
@@ -96,8 +97,8 @@ public class LoteDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total, saldo) " +
-                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo)";
+            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total, saldo, ativo) " +
+                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo, @ativo)";
 
             var command = new MySqlCommand(query, _connection);
 
@@ -105,6 +106,7 @@ public class LoteDao
             command.Parameters.AddWithValue("@valor_unitario", lote.ValorUnitario);
             command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
             command.Parameters.AddWithValue("@saldo", lote.Saldo);
+            command.Parameters.AddWithValue("@ativo", lote.Ativo);
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)
@@ -131,7 +133,9 @@ public class LoteDao
             const string query = "UPDATE lote SET " +
                                  "evento_id = @evento_id, " +
                                  "valor_unitario = @valor_unitario, " +
-                                 "quantidade_total = @quantidade_total " +
+                                 "quantidade_total = @quantidade_total, " +
+                                 "saldo = @quantidade_total, " +
+                                 "ativo = @ativo " +
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
@@ -139,6 +143,8 @@ public class LoteDao
             command.Parameters.AddWithValue("@evento_id", lote.EventoId);
             command.Parameters.AddWithValue("@valor_unitario", lote.ValorUnitario);
             command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
+            command.Parameters.AddWithValue("@saldo", lote.Saldo);
+            command.Parameters.AddWithValue("@ativo", lote.Ativo);
             command.Parameters.AddWithValue("@id", lote.IdLote);
             command.ExecuteNonQuery();
         }
