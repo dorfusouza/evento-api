@@ -1,19 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace api.Models;
+﻿namespace api.Models;
 
 public class Lote
 {
     [Column("id")]
-    public int IdLote { get; set; }
+    public required int IdLote { get; set; }
 
     [Column("evento_id")]
-    public int EventoId { get; set; }
+    public required int EventoId { get; set; }
 
     [Column("valor_unitario")]
-    public double ValorUnitario { get; set; }
+    public required double ValorUnitario { get; set; }
 
     [Column("quantidade_total")]
-    public int Saldo { get; set; }
-}
+    public required int QuantidadeTotal { get; set; }
 
+    [Column("saldo")]
+    public required int Saldo { get; set; }
+
+    [Column("descricao")]
+    public string? Descricao { get; set; }
+
+    [Column("ativo")]
+    public required int Ativo { get; set; }
+}

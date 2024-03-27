@@ -1,62 +1,52 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using api.DAO;
-using api.Repository;
-using Microsoft.AspNetCore.Mvc;
+namespace api.Controllers;
 
-namespace API.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class UsuarioControllers : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsuarioControllers : ControllerBase
+    private readonly UsuarioDao _usuarioDao;
+
+    public UsuarioControllers()
     {
-        private UsuarioDAO _usuarioDAO;
+        _usuarioDao = new UsuarioDao();
+    }
 
-        public UsuarioControllers(){
-            _usuarioDAO = new UsuarioDAO();
-        }
+    [HttpGet]
+    public IActionResult Read()
+    {
+        var usuarios = _usuarioDao.Get();
+        return Ok(usuarios);
+    }
 
-        [HttpGet]
-        public IActionResult GetAllUsuarios(){
-            var usuarios = _usuarioDAO.GetAll();
-            return Ok(usuarios);
-        } 
+    [HttpGet("{id:int}")]
+    public IActionResult ReadById(int id)
+    {
+        var usuario = _usuarioDao.GetById(id);
+        if (usuario == null) return NotFound();
+        return Ok(usuario);
+    }
 
-        [HttpGet("{id}")]
-        public IActionResult GetUsuarioId(int id){
-            var usuario = _usuarioDAO.GetId(id);
-            if (usuario  == null)
-            {
-                return NotFound();
-            }
-            return Ok(usuario);
-        }     
+    [HttpPost]
+    public IActionResult Post(Usuario usuario)
+    {
+        _usuarioDao.Create(usuario);
+        return CreatedAtAction(nameof(ReadById), new { id = usuario.IdUsuario }, usuario);
+    }
 
-        [HttpPost]
-        public IActionResult CreateUsuario(Usuario usuario)
-        {
-            _usuarioDAO.Create(usuario);
-            return Ok();            
-        }
+    [HttpPut("{id:int}")]
+    public IActionResult Put(int id, [FromBody] Usuario usuario)
+    {
+        if (id != usuario.IdUsuario) return BadRequest();
+        if (_usuarioDao.GetById(id) == null) return NotFound();
+        _usuarioDao.Update(id, usuario);
+        return NoContent();
+    }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateUsuario(int id, Usuario usuarioAtualizado){
-            if(_usuarioDAO.GetId(id) == null){
-                return NotFound();
-            }
-            _usuarioDAO.Update(id, usuarioAtualizado);
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteUsuario(int id){
-            if(_usuarioDAO.GetId(id) == null){
-                return NotFound();
-            }
-            _usuarioDAO.Delete(id);
-            return Ok();
-        }     
+    [HttpDelete("{id:int}")]
+    public IActionResult DeleteUsuario(int id)
+    {
+        if (_usuarioDao.GetById(id) == null) return NotFound();
+        _usuarioDao.Delete(id);
+        return NoContent();
     }
 }

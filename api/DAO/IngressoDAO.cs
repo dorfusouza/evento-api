@@ -1,214 +1,229 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using api.Models;
-using api.Repository;
-using MySql.Data.MySqlClient;
+﻿namespace api.DAO;
 
-namespace api.DAO
+public class IngressoDao
 {
-    public class IngressoDAO
+    private readonly MySqlConnection _connection;
+
+    public IngressoDao()
     {
-        private MySqlConnection _connection;
+        _connection = MySqlConnectionFactory.GetConnection();
+    }
 
+    private static List<Ingresso?> ReadAll(MySqlCommand command)
+    {
+        var ingressos = new List<Ingresso?>();
 
-        public IngressoDAO()
+        using var reader = command.ExecuteReader();
+        if (!reader.HasRows) return ingressos;
+        while (reader.Read())
         {
-            _connection = MySqlConnectionFactory.GetConnection();
+            var ingresso = new Ingresso
+            {
+                IdIngresso = reader.GetInt32("id"),
+                LoteId = reader.GetInt32("lote_id"),
+                PedidosId = reader.GetInt32("pedidos_id"),
+                PedidosUsuariosId = reader.GetInt32("pedidos_usuarios_id"),
+                Status = reader.GetString("status"),
+                Tipo = reader.GetString("tipo"),
+                Valor = reader.GetDouble("valor"),
+                DataUtilizacao = reader.GetDateTime("data_utilizacao")
+            };
+            ingressos.Add(ingresso);
         }
 
-        public List<Ingresso> GetAll()
-        {
-            List<Ingresso> ingressos = new List<Ingresso>();
-            string query = "SELECT * FROM ingressos";
+        return ingressos;
+    }
 
-            try
-            {
-                _connection.Open();
-                MySqlCommand command = new MySqlCommand(query, _connection);
-                using(MySqlDataReader reader = command.ExecuteReader())
-                {
-                    while(reader.Read())
-                    {
-                        Ingresso ingresso = new Ingresso();
-                        ingresso.IdIngresso = reader.GetInt32("id");
-                        ingresso.PedidosId = reader.GetInt32("pedidos_id");
-                        ingresso.PedidosUsuariosId= reader.GetInt32("pedidos_usuarios_id");
-                        ingresso.LoteId= reader.GetInt32("lote_id");
-                        ingresso.Valor= reader.GetString("valor");
-                        ingresso.Status = reader.GetString("status");
-                        ingresso.Tipo= reader.GetString("tipo");
-
-                        ingressos.Add(ingresso);
-                                                
-                    }
-                }
-            }
-            catch(MySqlException ex)
-            {
-                //mapeando os erros do banco!!!
-                Console.WriteLine($"Erro do BANCO: {ex.Message}");
-            }
-
-            catch(Exception ex)
-            {
-                //mapeando os erros de forma geral!!!
-                Console.WriteLine($"Erro Desconhecido: {ex.Message}");
-            }
-            finally
-            {
-                _connection.Close(); //fechando a conexão com o banco!!!
-            }
-
-            return ingressos; //retornando a lista!!!
-        }
-
-        public Ingresso GetId(int id)
-        {
-            Ingresso ingresso = new Ingresso();
-
-            string query = $"SELECT * FROM ingressos WHERE id = {id}";
-
-            try
-            {
-                _connection.Open();
-                MySqlCommand command = new MySqlCommand(query,_connection);
-                using (MySqlDataReader reader = command.ExecuteReader())
-                {
-                    if(reader.Read())
-                    {
-                        ingresso.IdIngresso = reader.GetInt32("id");
-                        ingresso.PedidosId = reader.GetInt32("pedidos_id");
-                        ingresso.PedidosUsuariosId= reader.GetInt32("pedidos_usuarios_id");
-                        ingresso.LoteId= reader.GetInt32("lote_id");
-                        ingresso.Valor= reader.GetString("valor");
-                        ingresso.Status = reader.GetString("status");
-                        ingresso.Tipo= reader.GetString("tipo");                 
-                    }
-                }
-            }
-
-            catch(MySqlException ex)
-            {
-                Console.WriteLine($"ERRO NO BANCO: {ex.Message}");
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"ERRO DESCONHECIDO: {ex.Message}");
-            }
-            finally
-            {
-                _connection.Close(); //fechando a conexão
-            }
-
-            return ingresso;
-        }
-
-        public void CreateIngresso(Ingresso ingresso)
-        {
-            string query = $"INSERT INTO ingressos (id, pedidos_id, pedidos_usuarios_id, lote_id, valor_ status, tipo)" + 
-            "VALUES (@IdIngresso, @PedidosId, @PedidosUsuariosId, @LoteId, @Valor, @Status, @Tipo)";
-
-            try
-            {
-                _connection.Open();
-                using(var command = new MySqlCommand(query, _connection))
-                {
-                    command.Parameters.AddWithValue("@IdIngresso", ingresso.IdIngresso);
-                    command.Parameters.AddWithValue("@PedidosId", ingresso.PedidosId);
-                    command.Parameters.AddWithValue("@PedidosUsuariosId", ingresso.PedidosUsuariosId);
-                    command.Parameters.AddWithValue("@LoteId", ingresso.LoteId);
-                    command.Parameters.AddWithValue("@Valor", ingresso.Valor);
-                    command.Parameters.AddWithValue("@Status", ingresso.Status);
-                    command.Parameters.AddWithValue("@Status", ingresso.Status);
-                    command.Parameters.AddWithValue("@Tipo", ingresso.Tipo);
-                    command.ExecuteNonQuery();
-                }
-            }
-
-            catch(MySqlException ex)
-            {
-                Console.WriteLine($"Erro de BANCO: {ex.Message}");
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"Erro de BANCO: {ex.Message}");
-            }
-            finally
-            {
-                _connection.Close();
-            }            
-        }
-
-        public void AtualizarIngresso(int id, Ingresso ingresso)
-        {
-            string query = "UPDATE ingressos SET" +
-                            "IdIngresso=@IdIngresso,    "+
-                            "PedidosId=@PedidosId,  "+
-                            "PedidosUsuariosId=@PedidosUsuariosId,  "+
-                            "LoteId=@LoteId,    "+
-                            "Valor=@Valor,  "+
-                            "Status=@Status, "+
-                            "Tipo=@Tipo";
-
+    public List<Ingresso?> Read()
+    {
+        List<Ingresso?> ingressos;
         try
         {
             _connection.Open();
-            using(var command = new MySqlCommand(query, _connection))
-            {
-                    command.Parameters.AddWithValue("@IdIngresso", ingresso.IdIngresso);
-                    command.Parameters.AddWithValue("@PedidosId", ingresso.PedidosId);
-                    command.Parameters.AddWithValue("@PedidosUsuariosId", ingresso.PedidosUsuariosId);
-                    command.Parameters.AddWithValue("@LoteId", ingresso.LoteId);
-                    command.Parameters.AddWithValue("@Valor", ingresso.Valor);
-                    command.Parameters.AddWithValue("@Status", ingresso.Status);
-                    command.Parameters.AddWithValue("@Status", ingresso.Status);
-                    command.Parameters.AddWithValue("@Tipo", ingresso.Tipo);
-                    command.ExecuteNonQuery();
-            }
+            const string query = "SELECT * FROM ingressos";
+            var command = new MySqlCommand(query, _connection);
+            ingressos = ReadAll(command);
         }
-            catch(MySqlException ex)
-            {
-                Console.WriteLine($"ERRO DE BANCO: {ex.Message}");
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"ERRO DESCONHECIDO: {ex.Message}");
-            }
-            finally
-            {
-                _connection.Close();
-            }
-
-        }
-
-        public void DeletarIngresso(int id)
+        catch (MySqlException e)
         {
-            string query="DELETE FROM ingressos WHERE id = @IdIngresso";
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
 
-            try
-            {
-                _connection.Open();
-                using(var command = new MySqlCommand(query, _connection))
-                {
-                    command.Parameters.AddWithValue("@IdIngresso", id);
-                    command.ExecuteNonQuery();
-                }
-            }
+        return ingressos;
+    }
 
-            catch(MySqlException ex)
-            {
-                Console.WriteLine($"ERRO DE BANCO: {ex.Message}");
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"ERRO DESCONHECIDO: {ex.Message}");
-            }
-            finally
-            {
-                _connection.Close();
-            }
+    public List<Ingresso?> ReadByPedidoId(int pedidoId)
+    {
+        List<Ingresso?> ingressos;
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT * FROM ingressos WHERE pedidos_id = @pedidos_id";
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@pedidos_id", pedidoId);
+            ingressos = ReadAll(command);
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return ingressos;
+    }
+
+    public Ingresso? ReadById(int id)
+    {
+        Ingresso? ingresso;
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT * FROM ingressos WHERE id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", id);
+
+            ingresso = ReadAll(command).FirstOrDefault();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return ingresso;
+    }
+
+    public void Create(Ingresso ingresso)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "INSERT INTO ingressos (lote_id, pedidos_id, pedidos_usuarios_id, status, tipo, valor, data_utilizacao) " +
+                                 "VALUES (@lote_id, @pedidos_id, @pedidos_usuarios_id, @status, @tipo, @valor, @data_utilizacao)";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@lote_id", ingresso.LoteId);
+            command.Parameters.AddWithValue("@pedidos_id", ingresso.PedidosId);
+            command.Parameters.AddWithValue("@pedidos_usuarios_id", ingresso.PedidosUsuariosId);
+            command.Parameters.AddWithValue("@status", ingresso.Status);
+            command.Parameters.AddWithValue("@tipo", ingresso.Tipo);
+            command.Parameters.AddWithValue("@valor", ingresso.Valor);
+            command.Parameters.AddWithValue("@data_utilizacao", ingresso.DataUtilizacao);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
         }
     }
+
+    public void Update(Ingresso ingresso)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "UPDATE ingressos SET " +
+                                 "lote_id = @lote_id, " +
+                                 "pedidos_id = @pedidos_id, " +
+                                 "pedidos_usuarios_id = @pedidos_usuarios_id, " +
+                                 "status = @status, " +
+                                 "tipo = @tipo, " +
+                                 "valor = @valor, " +
+                                 "data_utilizacao = @data_utilizacao " +
+                                 "WHERE id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@lote_id", ingresso.LoteId);
+            command.Parameters.AddWithValue("@pedidos_id", ingresso.PedidosId);
+            command.Parameters.AddWithValue("@pedidos_usuarios_id", ingresso.PedidosUsuariosId);
+            command.Parameters.AddWithValue("@status", ingresso.Status);
+            command.Parameters.AddWithValue("@tipo", ingresso.Tipo);
+            command.Parameters.AddWithValue("@valor", ingresso.Valor);
+            command.Parameters.AddWithValue("@data_utilizacao", ingresso.DataUtilizacao);
+            command.Parameters.AddWithValue("@id", ingresso.IdIngresso);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
+    public void Delete(int id)
+    {
+        try
+        {
+            _connection.Open();
+
+            const string query = "DELETE FROM ingressos WHERE id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", id);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
 }

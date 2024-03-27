@@ -1,18 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace api.Models;
+﻿namespace api.Models;
 
 public class Evento
 {
     [Column("id")]
-    public int IdEvento { get; set; }
+    public required int IdEvento { get; set; }
 
     [Column("data_evento")]
-    public DateTime DataEvento { get; set; }
+    public required DateTime DataEvento { get; set; }
 
     [Column("total_ingressos")]
-    public int TotalIngressos {get; set;}
+    public required int TotalIngressos { get; set; }
 
     [Column("descricao")]
-    public string? Descricao {get; set;}
+    public string? Descricao { get; set; }
+
+    [Column("imagem_url")]
+    public string? ImagemUrl { get; set; }
+
+    [Column("local")]
+    public required string Local { get; set; }
+
+    [Column("ativo")]
+    public required int Ativo { get; set; }
 }
