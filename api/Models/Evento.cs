@@ -13,4 +13,13 @@ public class Evento
 
     [Column("descricao")]
     public string? Descricao { get; set; }
+
+    [Column("imagem_url")]
+    public string? ImagemUrl { get; set; }
+
+    [Column("local")]
+    public required string Local { get; set; }
+
+    [Column("ativo")]
+    public required int Ativo { get; set; }
 }
