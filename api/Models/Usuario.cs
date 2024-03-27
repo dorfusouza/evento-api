@@ -21,5 +21,5 @@ public class Usuario
     public string? Perfil { get; set; }
 
     [Column("ativo")] 
-    public required int IsAtivo { get; set; }
+    public required int Ativo { get; set; }
 }

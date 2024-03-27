@@ -155,7 +155,7 @@ public class EventoDao
             command.Parameters.AddWithValue("@ImagemUrl", evento.ImagemUrl);
             command.Parameters.AddWithValue("@Local", evento.Local);
             command.Parameters.AddWithValue("@Ativo", evento.Ativo);
-            
+
             command.ExecuteNonQuery();
         }
         catch (MySqlException ex)

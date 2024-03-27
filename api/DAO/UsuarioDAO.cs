@@ -24,7 +24,7 @@ public class UsuarioDao
                 Senha = reader.GetString("senha"),
                 Email = reader.GetString("email"),
                 Telefone = reader.GetInt32("telefone"),
-                IsAtivo = reader.GetIn32("ativo"),
+                Ativo = reader.GetInt32("ativo"),
                 Perfil = reader.GetString("perfil")
             };
             usuarios.Add(usuario);
@@ -104,7 +104,7 @@ public class UsuarioDao
             command.Parameters.AddWithValue("@senha", usuario.Senha);
             command.Parameters.AddWithValue("@telefone", usuario.Telefone);
             command.Parameters.AddWithValue("@perfil", usuario.Perfil);
-            command.Parameters.AddWithValue("@ativo", usuario.IsAtivo);
+            command.Parameters.AddWithValue("@ativo", usuario.Ativo);
             command.ExecuteNonQuery();
         }
         catch (MySqlException ex)
@@ -141,7 +141,7 @@ public class UsuarioDao
             command.Parameters.AddWithValue("@senha", usuario.Senha);
             command.Parameters.AddWithValue("@telefone", usuario.Telefone);
             command.Parameters.AddWithValue("@perfil", usuario.Perfil);
-            command.Parameters.AddWithValue("@ativo", usuario.IsAtivo);
+            command.Parameters.AddWithValue("@ativo", usuario.Ativo);
             command.ExecuteNonQuery();
         }
         catch (MySqlException ex)
