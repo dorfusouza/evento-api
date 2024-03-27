@@ -24,7 +24,7 @@ public class UsuarioDao
                 Senha = reader.GetString("senha"),
                 Email = reader.GetString("email"),
                 Telefone = reader.GetInt32("telefone"),
-                IsAtivo = reader.GetBoolean("status"),
+                IsAtivo = reader.GetIn32("ativo"),
                 Perfil = reader.GetString("perfil")
             };
             usuarios.Add(usuario);
@@ -95,8 +95,8 @@ public class UsuarioDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO usuarios (nome_completo, email, senha, telefone, perfil, status)" +
-                                 "VALUES (@nome_completo, @email, @senha, @telefone, @perfil, @status)";
+            const string query = "INSERT INTO usuarios (nome_completo, email, senha, telefone, perfil, ativo)" +
+                                 "VALUES (@nome_completo, @email, @senha, @telefone, @perfil, @ativo)";
 
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@nome_completo", usuario.NomeCompleto);
@@ -104,7 +104,7 @@ public class UsuarioDao
             command.Parameters.AddWithValue("@senha", usuario.Senha);
             command.Parameters.AddWithValue("@telefone", usuario.Telefone);
             command.Parameters.AddWithValue("@perfil", usuario.Perfil);
-            command.Parameters.AddWithValue("@status", usuario.IsAtivo);
+            command.Parameters.AddWithValue("@ativo", usuario.IsAtivo);
             command.ExecuteNonQuery();
         }
         catch (MySqlException ex)
@@ -132,7 +132,7 @@ public class UsuarioDao
                                  "senha = @senha, " +
                                  "telefone = @telefone, " +
                                  "perfil = @perfil, " +
-                                 "status = @status " +
+                                 "ativo = @ativo " +
                                  "WHERE id = @id";
 
             using var command = new MySqlCommand(query, _connection);
@@ -141,7 +141,7 @@ public class UsuarioDao
             command.Parameters.AddWithValue("@senha", usuario.Senha);
             command.Parameters.AddWithValue("@telefone", usuario.Telefone);
             command.Parameters.AddWithValue("@perfil", usuario.Perfil);
-            command.Parameters.AddWithValue("@status", usuario.IsAtivo);
+            command.Parameters.AddWithValue("@ativo", usuario.IsAtivo);
             command.ExecuteNonQuery();
         }
         catch (MySqlException ex)

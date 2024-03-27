@@ -20,5 +20,6 @@ public class Usuario
     [Column("perfil")]
     public string? Perfil { get; set; }
 
-    [Column("status")] public required bool IsAtivo { get; set; }
+    [Column("ativo")] 
+    public required int IsAtivo { get; set; }
 }
