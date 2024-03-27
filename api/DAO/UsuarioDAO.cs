@@ -1,141 +1,185 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using api.Models;
-using api.Repository;
-using MySql.Data.MySqlClient;
+namespace api.DAO;
 
-namespace api.DAO
+public class UsuarioDao
 {
-    public class UsuarioDAO{
-        private MySqlConnection _connection;
+    private readonly MySqlConnection _connection;
 
-        public UsuarioDAO(){
-            _connection = MySqlConnectionFactory.GetConnection();
+    public UsuarioDao()
+    {
+        _connection = MySqlConnectionFactory.GetConnection();
+    }
+
+    private static List<Usuario?> ReadAll(MySqlCommand command)
+    {
+        var usuarios = new List<Usuario?>();
+
+        using var reader = command.ExecuteReader();
+        if (!reader.HasRows) return usuarios;
+        while (reader.Read())
+        {
+            var usuario = new Usuario
+            {
+                IdUsuario = reader.GetInt32("id"),
+                NomeCompleto = reader.GetString("nome_completo"),
+                Senha = reader.GetString("senha"),
+                Email = reader.GetString("email"),
+                Telefone = reader.GetInt32("telefone"),
+                Ativo = reader.GetInt32("ativo"),
+                Perfil = reader.GetString("perfil")
+            };
+            usuarios.Add(usuario);
         }
 
-        public List<Usuario> GetAll(){
-            List<Usuario> usuarios = new List<Usuario>();
-            string query = "SELECT * FROM usuarios";
-            try{
-                _connection.Open();
-                MySqlCommand command = new MySqlCommand(query, _connection);
-                using(MySqlDataReader reader =  command.ExecuteReader()){
-                    while(reader.Read()){
-                        Usuario usuario = new Usuario();
-                        usuario.IdUsuario = reader.GetInt32("id");
-                        usuario.NomeCompleto = reader.GetString("nome_completo");
-                        usuario.Senha = reader.GetString("senha");
-                        usuario.Email = reader.GetString("email");
-                        usuario.Telefone = reader.GetInt32("telefone");
-                        usuario.IsAtivo = reader.GetBoolean("status");
-                        usuario.Perfil = reader.GetString("perfil");
-                        usuarios.Add(usuario);
-                    }
-                }
+        return usuarios;
+    }
 
-            }catch(MySqlException ex){
-                Console.WriteLine($"Erro do BANCO: {ex.Message}");
-            }catch(Exception ex){
-                Console.WriteLine($"ERRO DESCONHECIDO: {ex.Message}");
-            }finally{
-                _connection.Close();
-            }
-            return usuarios;
-        }
+    public List<Usuario?> Get()
+    {
+        var usuarios = new List<Usuario?>();
 
-        public Usuario GetId(int id){
-            Usuario usuario = new Usuario();
-            string query = $"SELECT * FROM usuarios WHERE id = {id}";
-            try{
-                _connection.Open();
-                MySqlCommand command = new MySqlCommand(query, _connection);
-                using(MySqlDataReader reader = command.ExecuteReader()){   
-                    while(reader.Read()){
-                        usuario.IdUsuario = reader.GetInt32("id");
-                        usuario.NomeCompleto = reader.GetString("nome_completo");
-                        usuario.Senha = reader.GetString("senha");
-                        usuario.Email = reader.GetString("email");
-                        usuario.Telefone = reader.GetInt32("telefone");
-                        usuario.IsAtivo = reader.GetBoolean("status");
-                        usuario.Perfil = reader.GetString("perfil");
-                    }
-                }
-            }catch(MySqlException ex){
-                Console.WriteLine($"Erro no Banco: {ex.Message}");
-            }catch(Exception ex){
-                Console.WriteLine($"Erro Desconhecido: {ex.Message}");
-            }
-            finally{
-                _connection.Close();
-            }
-            return usuario;
-        }
-
-        public void Create(Usuario usuario){
-            string query = $"INSERT INTO usuarios (nome_completo, email, senha, telefone, perfil, status) values (@NomeCompleto, @Email, @Senha, @Telefone, @Perfil, @Status);";
-            try{
-                _connection.Open();
-                using (MySqlCommand command = new MySqlCommand(query, _connection)){
-                    command.Parameters.AddWithValue("@NomeCompleto", usuario.NomeCompleto);
-                    command.Parameters.AddWithValue("@Email", usuario.Email);
-                    command.Parameters.AddWithValue("@Senha", usuario.Senha);
-                    command.Parameters.AddWithValue("@Telefone", usuario.Telefone);
-                    command.Parameters.AddWithValue("@Perfil", usuario.Perfil);
-                    command.Parameters.AddWithValue("@Status", usuario.IsAtivo);
-                    command.ExecuteNonQuery();
-                }
-            }catch(MySqlException ex){
-                Console.WriteLine($"Erro no Banco: {ex.Message}");
-            }catch(Exception ex){
-                Console.WriteLine($"Erro Desconhecido: {ex.Message}");
-            }
-            finally{
-                _connection.Close();
-            }
-        }
-
-        public void Update(int id, Usuario usuario){
-            string query= $"UPDATE usuarios SET nome_completo=@NomeCompleto, Email=@Email, senha=@Senha, telefone=@Telefone, perfil=@Perfil, status=@Status WHERE id_personagem = {id}";
-            try{
+        try
+        {
             _connection.Open();
-            using ( MySqlCommand command = new MySqlCommand(query, _connection)){
-                command.Parameters.AddWithValue("@NomeCompleto", usuario.NomeCompleto);
-                command.Parameters.AddWithValue("@Email", usuario.Email);
-                command.Parameters.AddWithValue("@Senha", usuario.Senha);
-                command.Parameters.AddWithValue("@Telefone", usuario.Telefone);
-                command.Parameters.AddWithValue("@Perfil", usuario.Perfil);
-                command.Parameters.AddWithValue("@Status", usuario.IsAtivo);
-                command.ExecuteNonQuery();
-            }
-                
-            }catch(MySqlException ex){
-                Console.WriteLine($"Erro no Banco: {ex.Message}");
-            }catch(Exception ex){
-                Console.WriteLine($"Erro Desconhecido: {ex.Message}");
-            }finally{
-                _connection.Close();
-            }
+            const string query = "SELECT * FROM usuarios";
+            var command = new MySqlCommand(query, _connection);
+            usuarios = ReadAll(command);
         }
-        
-        public void Delete(int id){ 
-            string query = $"DELETE FROM usuarios WHERE id = {id}";
-            try{
-                _connection.Open();
-                using ( MySqlCommand command = new MySqlCommand(query, _connection)){
-                    command.ExecuteNonQuery();
-                }
-            }catch(MySqlException ex){
-                Console.WriteLine($"Erro no Banco: {ex.Message}");
-            }catch(Exception ex){
-                Console.WriteLine($"Erro Desconhecido: {ex.Message}");
-            }
-            finally{
-                _connection.Close();
-            }
+        catch (MySqlException ex)
+        {
+            Console.WriteLine($"Erro do BANCO: {ex.Message}");
         }
-        
+        catch (Exception ex)
+        {
+            Console.WriteLine($"ERRO DESCONHECIDO: {ex.Message}");
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return usuarios;
+    }
+
+    public Usuario? GetById(int id)
+    {
+        Usuario? usuario = null!;
+
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT * FROM usuarios WHERE id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", id);
+
+            usuario = ReadAll(command).FirstOrDefault();
+        }
+        catch (MySqlException ex)
+        {
+            Console.WriteLine($"Erro no Banco: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro Desconhecido: {ex.Message}");
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return usuario;
+    }
+
+    public void Create(Usuario usuario)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "INSERT INTO usuarios (nome_completo, email, senha, telefone, perfil, ativo)" +
+                                 "VALUES (@nome_completo, @email, @senha, @telefone, @perfil, @ativo)";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@nome_completo", usuario.NomeCompleto);
+            command.Parameters.AddWithValue("@email", usuario.Email);
+            command.Parameters.AddWithValue("@senha", usuario.Senha);
+            command.Parameters.AddWithValue("@telefone", usuario.Telefone);
+            command.Parameters.AddWithValue("@perfil", usuario.Perfil);
+            command.Parameters.AddWithValue("@ativo", usuario.Ativo);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException ex)
+        {
+            Console.WriteLine($"Erro no Banco: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro Desconhecido: {ex.Message}");
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
+    public void Update(int id, Usuario usuario)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "UPDATE usuarios SET " +
+                                 "nome_completo = @nome_completo, " +
+                                 "email = @email, " +
+                                 "senha = @senha, " +
+                                 "telefone = @telefone, " +
+                                 "perfil = @perfil, " +
+                                 "ativo = @ativo " +
+                                 "WHERE id = @id";
+
+            using var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@nome_completo", usuario.NomeCompleto);
+            command.Parameters.AddWithValue("@email", usuario.Email);
+            command.Parameters.AddWithValue("@senha", usuario.Senha);
+            command.Parameters.AddWithValue("@telefone", usuario.Telefone);
+            command.Parameters.AddWithValue("@perfil", usuario.Perfil);
+            command.Parameters.AddWithValue("@ativo", usuario.Ativo);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException ex)
+        {
+            Console.WriteLine($"Erro no Banco: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro Desconhecido: {ex.Message}");
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
+    public void Delete(int id)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "DELETE FROM usuarios WHERE id = @id";
+
+            using var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", id);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException ex)
+        {
+            Console.WriteLine($"Erro no Banco: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro Desconhecido: {ex.Message}");
+        }
+        finally
+        {
+            _connection.Close();
+        }
     }
 }

@@ -1,27 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace api.Models;
+﻿namespace api.Models;
 
 public class Ingresso
 {
+    // Pega os valores da tabela Ingresso
+
     [Column("id")]
-    public int IdIngresso {get; set;}
+    public required int IdIngresso { get; set; }
 
     [Column("pedidos_id")]
-    public int PedidosId {get; set;}
+    public required int PedidosId { get; set; }
 
     [Column("pedidos_usuarios_id")]
-    public int PedidosUsuariosId {get; set;}
+    public required int PedidosUsuariosId { get; set; }
 
     [Column("lote_id")]
-    public int LoteId {get; set;}
+    public required int LoteId { get; set; }
 
     [Column("valor")]
-    public string? Valor {get; set;}
+    public required double Valor { get; set; }
 
     [Column("status")]
-    public string? Status {get; set;}
+    public string? Status { get; set; }
 
     [Column("tipo")]
-    public string? Tipo {get; set;}
+    public required string Tipo { get; set; }
+
+    [Column("data_utilizacao")]
+    public DateTime? DataUtilizacao { get; set; }
 }
