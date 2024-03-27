@@ -14,14 +14,14 @@ public class EventoController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        var eventos = _eventoDao.Get();
+        var eventos = _eventoDao.Read();
         return Ok(eventos);
     }
 
     [HttpGet("{id:int}")]
     public IActionResult GetById(int id)
     {
-        var eventos = _eventoDao.GetById(id);
+        var eventos = _eventoDao.ReadById(id);
         if (eventos == null) return NotFound();
         return Ok(eventos);
     }
@@ -29,7 +29,7 @@ public class EventoController : ControllerBase
     [HttpPost]
     public IActionResult Set(Evento evento)
     {
-        _eventoDao.Set(evento);
+        _eventoDao.Create(evento);
         return CreatedAtAction(nameof(GetById), new { id = evento.IdEvento }, evento);
     }
 
@@ -37,16 +37,16 @@ public class EventoController : ControllerBase
     public IActionResult Put(int id, Evento evento)
     {
         if (id != evento.IdEvento) return BadRequest();
-        if (_eventoDao.GetById(id) == null) return NotFound();
-        _eventoDao.Put(id, evento);
+        if (_eventoDao.ReadById(id) == null) return NotFound();
+        _eventoDao.Update(id, evento);
         return NoContent();
     }
 
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {
-        if (_eventoDao.GetById(id) == null) return NotFound();
-        _eventoDao.DeleteEvento(id);
+        if (_eventoDao.ReadById(id) == null) return NotFound();
+        _eventoDao.Delete(id);
         return Ok();
     }
 }

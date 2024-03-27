@@ -91,7 +91,7 @@ public class LoteDao
         return lote;
     }
 
-    public void Set(Lote lote)
+    public void Create(Lote lote)
     {
         try
         {
@@ -123,7 +123,7 @@ public class LoteDao
         }
     }
 
-    public void Put(Lote lote)
+    public void Update(Lote lote)
     {
         try
         {

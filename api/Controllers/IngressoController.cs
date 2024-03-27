@@ -14,14 +14,14 @@ public class IngressoController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        var ingressos = _ingressoDao.Get();
+        var ingressos = _ingressoDao.Read();
         return Ok(ingressos);
     }
 
     [HttpGet("{id:int}")]
     public IActionResult GetById(int id)
     {
-        var ingressos = _ingressoDao.GetById(id);
+        var ingressos = _ingressoDao.ReadById(id);
         if (ingressos == null) return NotFound();
         return Ok(ingressos);
     }
@@ -29,7 +29,7 @@ public class IngressoController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] Ingresso ingresso)
     {
-        _ingressoDao.Set(ingresso);
+        _ingressoDao.Create(ingresso);
         return CreatedAtAction(nameof(GetById), new { id = ingresso.IdIngresso }, ingresso);
     }
 
@@ -37,15 +37,15 @@ public class IngressoController : ControllerBase
     public IActionResult Put(int id, Ingresso ingresso)
     {
         if (id != ingresso.IdIngresso) return BadRequest();
-        if (_ingressoDao.GetById(id) == null) return NotFound();
-        _ingressoDao.Put(ingresso);
+        if (_ingressoDao.ReadById(id) == null) return NotFound();
+        _ingressoDao.Update(ingresso);
         return NoContent();
     }
 
     [HttpDelete("{id:int}")]
     public IActionResult DeletarIngresso(int id)
     {
-        if (_ingressoDao.GetById(id) == null) return NotFound();
+        if (_ingressoDao.ReadById(id) == null) return NotFound();
         _ingressoDao.Delete(id);
         return NoContent();
     }

@@ -30,7 +30,7 @@ public class EventoDao
         return eventos;
     }
 
-    public List<Evento?> Get()
+    public List<Evento?> Read()
     {
         List<Evento?> eventos = null!;
 
@@ -61,7 +61,7 @@ public class EventoDao
         return eventos;
     }
 
-    public Evento? GetById(int id)
+    public Evento? ReadById(int id)
     {
         Evento? evento = null!;
 
@@ -94,7 +94,7 @@ public class EventoDao
         return evento;
     }
 
-    public void Set(Evento evento)
+    public void Create(Evento evento)
     {
         try
         {
@@ -126,7 +126,7 @@ public class EventoDao
         }
     }
 
-    public void Put(int id, Evento evento)
+    public void Update(int id, Evento evento)
     {
         try
         {
@@ -161,7 +161,7 @@ public class EventoDao
         }
     }
 
-    public void DeleteEvento(int id)
+    public void Delete(int id)
     {
         try
         {

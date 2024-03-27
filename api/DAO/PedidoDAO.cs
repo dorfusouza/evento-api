@@ -34,7 +34,7 @@ public class PedidoDao
         return pedidos;
     }
 
-    public List<Pedido?> Get()
+    public List<Pedido?> Read()
     {
         List<Pedido?> pedidos;
         try
@@ -62,7 +62,7 @@ public class PedidoDao
         return pedidos;
     }
 
-    public Pedido? GetById(int id)
+    public Pedido? ReadById(int id)
     {
         Pedido? pedido;
         try
@@ -93,7 +93,7 @@ public class PedidoDao
         return pedido;
     }
 
-    public void Set(Pedido pedido)
+    public void Create(Pedido pedido)
     {
         const string query = "INSERT INTO pedidos (usuarios_id, data, total, quantidade, forma_pagamento, status, validacao_id_usuario) " +
                              "values (@usuarios_id, @data_cadastro, @total, @quantidade, @forma_pagamento, @status, @validacao_id_usuario)";
@@ -126,7 +126,7 @@ public class PedidoDao
         }
     }
 
-    public void Put(Pedido pedido)
+    public void Update(Pedido pedido)
     {
         try
         {

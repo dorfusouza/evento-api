@@ -12,14 +12,14 @@ public class UsuarioControllers : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public IActionResult Read()
     {
         var usuarios = _usuarioDao.Get();
         return Ok(usuarios);
     }
 
     [HttpGet("{id:int}")]
-    public IActionResult GetById(int id)
+    public IActionResult ReadById(int id)
     {
         var usuario = _usuarioDao.GetById(id);
         if (usuario == null) return NotFound();
@@ -29,8 +29,8 @@ public class UsuarioControllers : ControllerBase
     [HttpPost]
     public IActionResult Post(Usuario usuario)
     {
-        _usuarioDao.Set(usuario);
-        return CreatedAtAction(nameof(GetById), new { id = usuario.IdUsuario }, usuario);
+        _usuarioDao.Create(usuario);
+        return CreatedAtAction(nameof(ReadById), new { id = usuario.IdUsuario }, usuario);
     }
 
     [HttpPut("{id:int}")]
@@ -38,7 +38,7 @@ public class UsuarioControllers : ControllerBase
     {
         if (id != usuario.IdUsuario) return BadRequest();
         if (_usuarioDao.GetById(id) == null) return NotFound();
-        _usuarioDao.Put(id, usuario);
+        _usuarioDao.Update(id, usuario);
         return NoContent();
     }
 

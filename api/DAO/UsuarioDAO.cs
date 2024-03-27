@@ -90,7 +90,7 @@ public class UsuarioDao
         return usuario;
     }
 
-    public void Set(Usuario usuario)
+    public void Create(Usuario usuario)
     {
         try
         {
@@ -121,7 +121,7 @@ public class UsuarioDao
         }
     }
 
-    public void Put(int id, Usuario usuario)
+    public void Update(int id, Usuario usuario)
     {
         try
         {

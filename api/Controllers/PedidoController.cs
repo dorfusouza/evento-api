@@ -14,14 +14,14 @@ public class PedidoController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        var pedidos = _pedidoDao.Get();
+        var pedidos = _pedidoDao.Read();
         return Ok(pedidos);
     }
 
     [HttpGet("{id:int}")]
     public IActionResult GetById(int id)
     {
-        var pedido = _pedidoDao.GetById(id);
+        var pedido = _pedidoDao.ReadById(id);
         if (pedido == null) return NotFound();
         return Ok(pedido);
     }
@@ -29,7 +29,7 @@ public class PedidoController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] Pedido pedido)
     {
-        _pedidoDao.Set(pedido);
+        _pedidoDao.Create(pedido);
         return CreatedAtAction(nameof(GetById), new { id = pedido.IdPedido }, pedido);
     }
 
@@ -37,15 +37,15 @@ public class PedidoController : ControllerBase
     public IActionResult Put(int id, [FromBody] Pedido pedido)
     {
         if (id != pedido.IdPedido) return BadRequest();
-        if (_pedidoDao.GetById(id) == null) return NotFound();
-        _pedidoDao.Put(pedido);
+        if (_pedidoDao.ReadById(id) == null) return NotFound();
+        _pedidoDao.Update(pedido);
         return NoContent();
     }
 
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {
-        if (_pedidoDao.GetById(id) == null) return NotFound();
+        if (_pedidoDao.ReadById(id) == null) return NotFound();
         _pedidoDao.Delete(id);
         return NoContent();
     }

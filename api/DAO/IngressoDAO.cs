@@ -33,7 +33,7 @@ public class IngressoDao
         return ingressos;
     }
 
-    public List<Ingresso?> Get()
+    public List<Ingresso?> Read()
     {
         List<Ingresso?> ingressos;
         try
@@ -90,7 +90,7 @@ public class IngressoDao
         return ingressos;
     }
 
-    public Ingresso? GetById(int id)
+    public Ingresso? ReadById(int id)
     {
         Ingresso? ingresso;
         try
@@ -121,7 +121,7 @@ public class IngressoDao
         return ingresso;
     }
 
-    public void Set(Ingresso ingresso)
+    public void Create(Ingresso ingresso)
     {
         try
         {
@@ -154,7 +154,7 @@ public class IngressoDao
         }
     }
 
-    public void Put(Ingresso ingresso)
+    public void Update(Ingresso ingresso)
     {
         try
         {
