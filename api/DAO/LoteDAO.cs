@@ -23,8 +23,9 @@ public class LoteDao
                 EventoId = reader.GetInt32("evento_id"),
                 ValorUnitario = reader.GetDouble("valor_unitario"),
                 QuantidadeTotal = reader.GetInt32("quantidade_total"),
-                Saldo = reader.GetInt32("quantidade_total"),
-                Ativo = reader.GetInt32("ativo")
+                Saldo = reader.GetInt32("saldo"),
+                Ativo = reader.GetInt32("ativo"),
+                Descricao = reader.GetString("descricao")
             };
             lotes.Add(lote);
         }
@@ -97,16 +98,17 @@ public class LoteDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total, saldo, ativo) " +
-                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo, @ativo)";
+            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total, saldo, ativo, descricao) " +
+                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo, @ativo, @descricao)";
 
             var command = new MySqlCommand(query, _connection);
 
             command.Parameters.AddWithValue("@evento_id", lote.EventoId);
             command.Parameters.AddWithValue("@valor_unitario", lote.ValorUnitario);
-            command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
+            command.Parameters.AddWithValue("@quantidade_total", lote.QuantidadeTotal);
             command.Parameters.AddWithValue("@saldo", lote.Saldo);
             command.Parameters.AddWithValue("@ativo", lote.Ativo);
+            command.Parameters.AddWithValue("@descricao", lote.Descricao);
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)
@@ -135,17 +137,19 @@ public class LoteDao
                                  "valor_unitario = @valor_unitario, " +
                                  "quantidade_total = @quantidade_total, " +
                                  "saldo = @quantidade_total, " +
-                                 "ativo = @ativo " +
+                                 "ativo = @ativo, " +
+                                 "descricao = @descricao " +
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
 
             command.Parameters.AddWithValue("@evento_id", lote.EventoId);
             command.Parameters.AddWithValue("@valor_unitario", lote.ValorUnitario);
-            command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
+            command.Parameters.AddWithValue("@quantidade_total", lote.QuantidadeTotal);
             command.Parameters.AddWithValue("@saldo", lote.Saldo);
             command.Parameters.AddWithValue("@ativo", lote.Ativo);
             command.Parameters.AddWithValue("@id", lote.IdLote);
+            command.Parameters.AddWithValue("@descricao", lote.Descricao);
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)

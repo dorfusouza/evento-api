@@ -121,7 +121,7 @@ public class UsuarioDao
         }
     }
 
-    public void Update(int id, Usuario usuario)
+    public void Update(Usuario usuario)
     {
         try
         {
@@ -135,7 +135,8 @@ public class UsuarioDao
                                  "ativo = @ativo " +
                                  "WHERE id = @id";
 
-            using var command = new MySqlCommand(query, _connection);
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", usuario.IdUsuario);
             command.Parameters.AddWithValue("@nome_completo", usuario.NomeCompleto);
             command.Parameters.AddWithValue("@email", usuario.Email);
             command.Parameters.AddWithValue("@senha", usuario.Senha);

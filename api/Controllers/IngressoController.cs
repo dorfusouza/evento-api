@@ -33,11 +33,10 @@ public class IngressoController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = ingresso.IdIngresso }, ingresso);
     }
 
-    [HttpPut("{id:int}")]
-    public IActionResult Put(int id, Ingresso ingresso)
+    [HttpPut]
+    public IActionResult Put(Ingresso ingresso)
     {
-        if (id != ingresso.IdIngresso) return BadRequest();
-        if (_ingressoDao.ReadById(id) == null) return NotFound();
+        if (_ingressoDao.ReadById(ingresso.IdIngresso) == null) return NotFound();
         _ingressoDao.Update(ingresso);
         return NoContent();
     }

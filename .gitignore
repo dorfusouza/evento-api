@@ -9,3 +9,4 @@ api/obj/Debug/net8.0/api.csproj.AssemblyReference.cache
 api/obj/Debug/net8.0/api.GeneratedMSBuildEditorConfig.editorconfig
 api/obj/project.assets.json
 api/obj/project.nuget.cache
+api/Repository/MySqlConnectionFactory.cs

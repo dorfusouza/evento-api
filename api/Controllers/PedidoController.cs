@@ -33,11 +33,10 @@ public class PedidoController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = pedido.IdPedido }, pedido);
     }
 
-    [HttpPut("{id:int}")]
-    public IActionResult Put(int id, [FromBody] Pedido pedido)
+    [HttpPut]
+    public IActionResult Put([FromBody] Pedido pedido)
     {
-        if (id != pedido.IdPedido) return BadRequest();
-        if (_pedidoDao.ReadById(id) == null) return NotFound();
+        if (_pedidoDao.ReadById(pedido.IdPedido) == null) return NotFound();
         _pedidoDao.Update(pedido);
         return NoContent();
     }

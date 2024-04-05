@@ -102,7 +102,7 @@ public class EventoDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO evento (id, descricao, data_evento, total_ingresso, imagem_url, local, ativo) " +
+            const string query = "INSERT INTO evento (id, descricao, data_evento, total_ingressos, imagem_url, local, ativo) " +
                                  "VALUES(@Id,  @Descricao, @DataEvento, @TotalIngressos, @ImagemUrl, @Local, @Ativo)";
 
             using var command = new MySqlCommand(query, _connection);
@@ -132,7 +132,7 @@ public class EventoDao
         }
     }
 
-    public void Update(int id, Evento evento)
+    public void Update(Evento evento)
     {
         try
         {

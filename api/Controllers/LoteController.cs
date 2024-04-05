@@ -33,11 +33,10 @@ public class LoteController : ControllerBase
         return CreatedAtAction(nameof(ReadById), new { id = lote.IdLote }, lote);
     }
 
-    [HttpPut("{id:int}")]
-    public IActionResult Put(int id, [FromBody] Lote lote)
+    [HttpPut]
+    public IActionResult Put([FromBody] Lote lote)
     {
-        if (id != lote.IdLote) return BadRequest();
-        if (_loteDao.GetById(id) == null) return NotFound();
+        if (_loteDao.GetById(lote.IdLote) == null) return NotFound();
         _loteDao.Update(lote);
         return NoContent();
     }

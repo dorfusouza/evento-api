@@ -2,24 +2,24 @@ namespace api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsuarioControllers : ControllerBase
+public class UsuarioController : ControllerBase
 {
     private readonly UsuarioDao _usuarioDao;
 
-    public UsuarioControllers()
+    public UsuarioController()
     {
         _usuarioDao = new UsuarioDao();
     }
 
     [HttpGet]
-    public IActionResult Read()
+    public IActionResult Get()
     {
         var usuarios = _usuarioDao.Get();
         return Ok(usuarios);
     }
 
     [HttpGet("{id:int}")]
-    public IActionResult ReadById(int id)
+    public IActionResult GetById(int id)
     {
         var usuario = _usuarioDao.GetById(id);
         if (usuario == null) return NotFound();
@@ -30,20 +30,19 @@ public class UsuarioControllers : ControllerBase
     public IActionResult Post(Usuario usuario)
     {
         _usuarioDao.Create(usuario);
-        return CreatedAtAction(nameof(ReadById), new { id = usuario.IdUsuario }, usuario);
+        return CreatedAtAction(nameof(GetById), new { id = usuario.IdUsuario }, usuario);
     }
 
-    [HttpPut("{id:int}")]
-    public IActionResult Put(int id, [FromBody] Usuario usuario)
+    [HttpPut]
+    public IActionResult Put(Usuario usuario)
     {
-        if (id != usuario.IdUsuario) return BadRequest();
-        if (_usuarioDao.GetById(id) == null) return NotFound();
-        _usuarioDao.Update(id, usuario);
+        if (_usuarioDao.GetById(usuario.IdUsuario) == null) return NotFound();
+        _usuarioDao.Update(usuario);
         return NoContent();
     }
 
     [HttpDelete("{id:int}")]
-    public IActionResult DeleteUsuario(int id)
+    public IActionResult Delete(int id)
     {
         if (_usuarioDao.GetById(id) == null) return NotFound();
         _usuarioDao.Delete(id);

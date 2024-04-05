@@ -27,18 +27,17 @@ public class EventoController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Set(Evento evento)
+    public IActionResult Post(Evento evento)
     {
         _eventoDao.Create(evento);
         return CreatedAtAction(nameof(GetById), new { id = evento.IdEvento }, evento);
     }
 
-    [HttpPut("{id:int}")]
-    public IActionResult Put(int id, Evento evento)
+    [HttpPut]
+    public IActionResult Put(Evento evento)
     {
-        if (id != evento.IdEvento) return BadRequest();
-        if (_eventoDao.ReadById(id) == null) return NotFound();
-        _eventoDao.Update(id, evento);
+        if (_eventoDao.ReadById(evento.IdEvento) == null) return NotFound();
+        _eventoDao.Update(evento);
         return NoContent();
     }
 
