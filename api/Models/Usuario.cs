@@ -15,7 +15,7 @@ public class Usuario
     public required string Senha { get; set; }
 
     [Column("telefone")]
-    public required int Telefone { get; set; }
+    public required string Telefone { get; set; }
 
     [Column("perfil")]
     public string? Perfil { get; set; }

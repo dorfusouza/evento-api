@@ -23,7 +23,7 @@ public class UsuarioDao
                 NomeCompleto = reader.GetString("nome_completo"),
                 Senha = reader.GetString("senha"),
                 Email = reader.GetString("email"),
-                Telefone = reader.GetInt32("telefone"),
+                Telefone = reader.GetString("telefone"),
                 Ativo = reader.GetInt32("ativo"),
                 Perfil = reader.GetString("perfil")
             };

@@ -10,3 +10,10 @@ api/obj/Debug/net8.0/api.GeneratedMSBuildEditorConfig.editorconfig
 api/obj/project.assets.json
 api/obj/project.nuget.cache
 api/Repository/MySqlConnectionFactory.cs
+api/.idea/.idea.api/.idea/indexLayout.xml
+api/.idea/.idea.api/.idea/inspectionProfiles/Project_Default.xml
+api/.idea/.idea.api/.idea/material_theme_project_new.xml
+api/.idea/.idea.api/.idea/vcs.xml
+api/bin/Debug/net8.0/api.dll
+api/bin/Debug/net8.0/api.exe
+api/bin/Debug/net8.0/api.pdb
