@@ -2,11 +2,11 @@ namespace api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsuarioControllers : ControllerBase
+public class UsuarioController : ControllerBase
 {
     private readonly UsuarioDao _usuarioDao;
 
-    public UsuarioControllers()
+    public UsuarioController()
     {
         _usuarioDao = new UsuarioDao();
     }
