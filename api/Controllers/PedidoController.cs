@@ -42,6 +42,22 @@ public class PedidoController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("validar/{id:int}")]
+    public IActionResult PutValidar(int id, int validacaoIdUsuario)
+    {
+        if (_pedidoDao.ReadById(id) == null) return NotFound();
+        var pedido = _pedidoDao.ReadById(id);
+        if (pedido == null) return NotFound();
+        pedido.ValidacaoIdUsuario = validacaoIdUsuario;
+        if (pedido.Status == "Cancelado")
+        {
+            return BadRequest("Pedido cancelado não pode ser validado");
+        }
+        _pedidoDao.Validate(pedido);
+        return Ok(_pedidoDao.ReadById(id));
+    }
+
+
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {

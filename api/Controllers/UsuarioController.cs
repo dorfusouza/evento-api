@@ -39,7 +39,7 @@ public class UsuarioController : ControllerBase
         if (id != usuario.IdUsuario) return BadRequest();
         if (_usuarioDao.GetById(id) == null) return NotFound();
         _usuarioDao.Update(id, usuario);
-        return NoContent();
+        return Ok(_usuarioDao.GetById(id));
     }
 
     [HttpDelete("{id:int}")]

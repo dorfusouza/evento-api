@@ -62,6 +62,50 @@ public class PedidoDao
         return pedidos;
     }
 
+    public void Validate(Pedido pedido)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "UPDATE pedidos SET " +
+                                 "status = @status, " +
+                                 "validacao_id_usuario = @validacao_id_usuario " +
+                                 "WHERE id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+
+            var Status = "";
+
+            if (pedido.Status == "Validado")
+            {
+                Status = "Pendente";
+                pedido.ValidacaoIdUsuario = 0;
+            } else if (pedido.Status == "Pendente")
+            {
+                Status = "Validado";
+            }
+
+            command.Parameters.AddWithValue("@status", Status);
+            command.Parameters.AddWithValue("@validacao_id_usuario", pedido.ValidacaoIdUsuario);
+            command.Parameters.AddWithValue("@id", pedido.IdPedido);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
     public Pedido? ReadById(int id)
     {
         Pedido? pedido;

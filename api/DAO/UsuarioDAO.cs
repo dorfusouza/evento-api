@@ -142,6 +142,7 @@ public class UsuarioDao
             command.Parameters.AddWithValue("@telefone", usuario.Telefone);
             command.Parameters.AddWithValue("@perfil", usuario.Perfil);
             command.Parameters.AddWithValue("@ativo", usuario.Ativo);
+            command.Parameters.AddWithValue("@id", id);
             command.ExecuteNonQuery();
         }
         catch (MySqlException ex)

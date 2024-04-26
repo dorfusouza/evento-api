@@ -6,7 +6,7 @@ public class Pedido
     public required int IdPedido { get; set; }
 
     [Column("usuarios_id")]
-    public required int UsuariosId { get; set; }
+    public int? UsuariosId { get; set; }
 
     [Column("data")]
     public required DateTime DataCadastro { get; set; }
