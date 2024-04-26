@@ -183,4 +183,46 @@ public class UsuarioDao
             _connection.Close();
         }
     }
+
+    public Usuario GetEmail(string email)
+    {
+        Usuario? usuario = null;
+
+        string query = $"SELECT * FROM usuarios WHERE email = '{email}'";
+        try
+        {
+            _connection.Open();
+            MySqlCommand command = new MySqlCommand(query, _connection);
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+
+                if (reader.Read())
+                {
+                    usuario = new Usuario
+                    {
+                        IdUsuario = reader.GetInt32("id"),
+                        NomeCompleto = reader.GetString("nome_completo"),
+                        Senha = reader.GetString("senha"),
+                        Email = reader.GetString("email"),
+                        Telefone = reader.GetString("telefone"),
+                        Ativo = reader.GetInt32("ativo"),
+                        Perfil = reader.GetString("perfil")
+                    };
+                }
+            }
+        }
+        catch (MySqlException ex)
+        {
+            Console.WriteLine($"Erro no banco: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro desconhecido: {ex.Message}");
+        }
+        finally
+        {
+            _connection.Close();
+        }
+        return usuario;
+    }
 }
