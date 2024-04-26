@@ -49,4 +49,23 @@ public class UsuarioController : ControllerBase
         _usuarioDao.Delete(id);
         return NoContent();
     }
+
+    [HttpPost("login")]
+    public IActionResult GetLoginAsync([FromBody] UsuarioCredenciais credentials)
+    {
+        var usuario = _usuarioDao.GetEmail(credentials.email);
+
+        if (usuario == null)
+        {
+            return Unauthorized("E-mail não existe");
+        }
+        else if (usuario.Senha != credentials.senha)
+        {
+            return Unauthorized("Senha incorreta");
+        }
+        else
+        {
+            return Ok(usuario);
+        }
+    }
 }
