@@ -24,7 +24,9 @@ public class LoteDao
                 ValorUnitario = reader.GetDouble("valor_unitario"),
                 QuantidadeTotal = reader.GetInt32("quantidade_total"),
                 Saldo = reader.GetInt32("quantidade_total"),
-                Ativo = reader.GetInt32("ativo")
+                Ativo = reader.GetInt32("ativo"),
+                DataFinal = reader.GetDateTime("data_final"),
+                DataInicio = reader.GetDateTime("data_inicio")
             };
             lotes.Add(lote);
         }
@@ -98,7 +100,7 @@ public class LoteDao
         {
             _connection.Open();
             const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total, saldo, ativo) " +
-                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo, @ativo)";
+                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo, @ativo, @data_final, @data_inicio)";
 
             var command = new MySqlCommand(query, _connection);
 
@@ -107,6 +109,8 @@ public class LoteDao
             command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
             command.Parameters.AddWithValue("@saldo", lote.Saldo);
             command.Parameters.AddWithValue("@ativo", lote.Ativo);
+            command.Parameters.AddWithValue("@data_final", lote.DataFinal);
+            command.Parameters.AddWithValue("@data_inicio", lote.DataInicio);
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)
@@ -136,6 +140,8 @@ public class LoteDao
                                  "quantidade_total = @quantidade_total, " +
                                  "saldo = @quantidade_total, " +
                                  "ativo = @ativo " +
+                                 "data_final = @data_final " +
+                                 "data_inicio = @data_final " +
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
@@ -145,6 +151,8 @@ public class LoteDao
             command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
             command.Parameters.AddWithValue("@saldo", lote.Saldo);
             command.Parameters.AddWithValue("@ativo", lote.Ativo);
+            command.Parameters.AddWithValue("@data_final", lote.DataFinal);
+            command.Parameters.AddWithValue("@data_inicio", lote.DataInicio);
             command.Parameters.AddWithValue("@id", lote.IdLote);
             command.ExecuteNonQuery();
         }

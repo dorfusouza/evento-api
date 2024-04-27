@@ -22,7 +22,7 @@ public class EventoDao
                 IdEvento = reader.GetInt32("id"),
                 Descricao = reader.GetString("descricao"),
                 DataEvento = reader.GetDateTime("data_evento"),
-                TotalIngressos = reader.GetInt32("total_ingressos"),
+                NomeEvento = reader.GetString("nome_evento"),
                 ImagemUrl = reader.GetString("imagem_url"),
                 Local = reader.GetString("local"),
                 Ativo = reader.GetInt32("ativo")
@@ -102,14 +102,14 @@ public class EventoDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO evento (id, descricao, data_evento, total_ingressos, imagem_url, local, ativo) " +
-                                 "VALUES(@Id,  @Descricao, @DataEvento, @TotalIngressos, @ImagemUrl, @Local, @Ativo)";
+            const string query = "INSERT INTO evento (id, descricao, data_evento, nome_evento, imagem_url, local, ativo) " +
+                                 "VALUES(@Id,  @Descricao, @DataEvento, @NomeEvento, @ImagemUrl, @Local, @Ativo)";
 
             using var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@Id", evento.IdEvento);
             command.Parameters.AddWithValue("@Descricao", evento.Descricao);
             command.Parameters.AddWithValue("@DataEvento", evento.DataEvento);
-            command.Parameters.AddWithValue("@TotalIngressos", evento.TotalIngressos);
+            command.Parameters.AddWithValue("@NomeEvento", evento.NomeEvento);
             command.Parameters.AddWithValue("@ImagemUrl", evento.ImagemUrl);
             command.Parameters.AddWithValue("@Local", evento.Local);
             command.Parameters.AddWithValue("@Ativo", evento.Ativo);
@@ -140,7 +140,7 @@ public class EventoDao
             const string query = "UPDATE evento SET " +
                                  "descricao = @Descricao, " +
                                  "data_evento = @DataEvento, " +
-                                 "total_ingressos = @TotalIngressos, " +
+                                 "nome_evento = @NomeEvento, " +
                                  "imagem_url = @ImagemUrl, " +
                                  "local = @Local, " +
                                  "ativo = @Ativo " +
@@ -151,10 +151,11 @@ public class EventoDao
             command.Parameters.AddWithValue("@Id", evento.IdEvento);
             command.Parameters.AddWithValue("@Descricao", evento.Descricao);
             command.Parameters.AddWithValue("@DataEvento", evento.DataEvento);
-            command.Parameters.AddWithValue("@TotalIngressos", evento.TotalIngressos);
+            command.Parameters.AddWithValue("@NomeEvento", evento.NomeEvento);
             command.Parameters.AddWithValue("@ImagemUrl", evento.ImagemUrl);
             command.Parameters.AddWithValue("@Local", evento.Local);
             command.Parameters.AddWithValue("@Ativo", evento.Ativo);
+            command.Parameters.AddWithValue("@Id", id);
 
             command.ExecuteNonQuery();
         }

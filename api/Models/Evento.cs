@@ -8,9 +8,6 @@ public class Evento
     [Column("data_evento")]
     public required DateTime DataEvento { get; set; }
 
-    [Column("total_ingressos")]
-    public required int TotalIngressos { get; set; }
-
     [Column("descricao")]
     public string? Descricao { get; set; }
 
@@ -22,4 +19,7 @@ public class Evento
 
     [Column("ativo")]
     public required int Ativo { get; set; }
+
+    [Column("nome_evento")]
+    public required string NomeEvento { get; set; }
 }

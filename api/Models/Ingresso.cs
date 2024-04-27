@@ -16,9 +16,6 @@ public class Ingresso
     [Column("lote_id")]
     public required int LoteId { get; set; }
 
-    [Column("valor")]
-    public required double Valor { get; set; }
-
     [Column("status")]
     public string? Status { get; set; }
 
