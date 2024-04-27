@@ -5,7 +5,7 @@
 public class LoteController : ControllerBase
 {
     private readonly LoteDao _loteDao;
-
+    private readonly IngressoDao _ingressoDao;
     public LoteController()
     {
         _loteDao = new LoteDao();
@@ -28,9 +28,13 @@ public class LoteController : ControllerBase
 
     [HttpPost]
     public IActionResult Post([FromBody] Lote lote)
-    {
+    {   
+        if (lote.EventoId == 0) return BadRequest();
+        if (lote.DataFinal == null) lote.DataFinal = DateTime.Now;
+        if (lote.DataInicio == null) lote.DataInicio = DateTime.Now;
         _loteDao.Create(lote);
-        return CreatedAtAction(nameof(ReadById), new { id = lote.IdLote }, lote);
+
+        return Ok(lote.EventoId);
     }
 
     [HttpPut("{id:int}")]

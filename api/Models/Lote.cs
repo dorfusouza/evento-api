@@ -21,9 +21,11 @@ public class Lote
     public required int Ativo { get; set; }
 
     [Column("data_inicio")]
-    public required DateTime DataInicio { get; set; }
+    public DateTime? DataInicio { get; set; }
 
     [Column("data_final")]
-    public required DateTime DataFinal { get; set; }
+    public DateTime? DataFinal { get; set; }
 
+    [Column("tipo")]
+    public required string Tipo { get; set; }
 }

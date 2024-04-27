@@ -29,8 +29,8 @@ public class EventoController : ControllerBase
     [HttpPost]
     public IActionResult Set(Evento evento)
     {
-        _eventoDao.Create(evento);
-        return CreatedAtAction(nameof(GetById), new { id = evento.IdEvento }, evento);
+        int id = _eventoDao.Create(evento);
+        return Ok(id);
     }
 
     [HttpPut("{id:int}")]

@@ -26,7 +26,8 @@ public class LoteDao
                 Saldo = reader.GetInt32("quantidade_total"),
                 Ativo = reader.GetInt32("ativo"),
                 DataFinal = reader.GetDateTime("data_final"),
-                DataInicio = reader.GetDateTime("data_inicio")
+                DataInicio = reader.GetDateTime("data_inicio"),
+                Tipo = reader.GetString("tipo")
             };
             lotes.Add(lote);
         }
@@ -99,8 +100,8 @@ public class LoteDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total, saldo, ativo) " +
-                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo, @ativo, @data_final, @data_inicio)";
+            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total, saldo, ativo, data_final, data_inicio, tipo) " +
+                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo, @ativo, @data_final, @data_inicio, @tipo)";
 
             var command = new MySqlCommand(query, _connection);
 
@@ -111,6 +112,8 @@ public class LoteDao
             command.Parameters.AddWithValue("@ativo", lote.Ativo);
             command.Parameters.AddWithValue("@data_final", lote.DataFinal);
             command.Parameters.AddWithValue("@data_inicio", lote.DataInicio);
+            command.Parameters.AddWithValue("@tipo", lote.Tipo);
+
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)
@@ -142,6 +145,7 @@ public class LoteDao
                                  "ativo = @ativo " +
                                  "data_final = @data_final " +
                                  "data_inicio = @data_final " +
+                                 "tipo = @tipo" +
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
@@ -153,6 +157,7 @@ public class LoteDao
             command.Parameters.AddWithValue("@ativo", lote.Ativo);
             command.Parameters.AddWithValue("@data_final", lote.DataFinal);
             command.Parameters.AddWithValue("@data_inicio", lote.DataInicio);
+            command.Parameters.AddWithValue("@tipo", lote.Tipo);
             command.Parameters.AddWithValue("@id", lote.IdLote);
             command.ExecuteNonQuery();
         }

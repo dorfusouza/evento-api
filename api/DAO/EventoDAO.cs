@@ -97,8 +97,9 @@ public class EventoDao
         return evento;
     }
 
-    public void Create(Evento evento)
+    public int Create(Evento evento)
     {
+        int id = 0;
         try
         {
             _connection.Open();
@@ -115,6 +116,7 @@ public class EventoDao
             command.Parameters.AddWithValue("@Ativo", evento.Ativo);
 
             command.ExecuteNonQuery();
+            id = (int)command.LastInsertedId;
         }
         catch (MySqlException ex)
         {
@@ -130,6 +132,7 @@ public class EventoDao
         {
             _connection.Close();
         }
+        return id;
     }
 
     public void Update(int id, Evento evento)
