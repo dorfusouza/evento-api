@@ -64,6 +64,38 @@ public class LoteDao
         return lotes;
     }
 
+    //GetByEventoId
+    public List<Lote?> GetByEventoId(int id)
+    {
+        List<Lote?> lotes;
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT * FROM lote WHERE evento_id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", id);
+
+            lotes = ReadAll(command);
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return lotes;
+    }
+
     public Lote? GetById(int id)
     {
         Lote? lote;
@@ -95,8 +127,9 @@ public class LoteDao
         return lote;
     }
 
-    public void Create(Lote lote)
+    public Lote Create(Lote lote)
     {
+        Lote createdLote = lote;
         try
         {
             _connection.Open();
@@ -115,6 +148,7 @@ public class LoteDao
             command.Parameters.AddWithValue("@tipo", lote.Tipo);
 
             command.ExecuteNonQuery();
+            createdLote.IdLote = (int)command.LastInsertedId;
         }
         catch (MySqlException e)
         {
@@ -130,6 +164,7 @@ public class LoteDao
         {
             _connection.Close();
         }
+        return createdLote;
     }
 
     public void Update(Lote lote)
@@ -142,10 +177,10 @@ public class LoteDao
                                  "valor_unitario = @valor_unitario, " +
                                  "quantidade_total = @quantidade_total, " +
                                  "saldo = @quantidade_total, " +
-                                 "ativo = @ativo " +
-                                 "data_final = @data_final " +
-                                 "data_inicio = @data_final " +
-                                 "tipo = @tipo" +
+                                 "ativo = @ativo, " +
+                                 "data_final = @data_final, " +
+                                 "data_inicio = @data_final, " +
+                                 "tipo = @tipo " +
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
@@ -186,6 +221,34 @@ public class LoteDao
 
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@id", idLote);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
+    //delete by evento id
+    public void DeleteByEventoId(int idEvento)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "DELETE FROM lote WHERE evento_id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", idEvento);
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)

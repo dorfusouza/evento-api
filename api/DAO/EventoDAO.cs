@@ -151,7 +151,6 @@ public class EventoDao
 
             using var command = new MySqlCommand(query, _connection);
 
-            command.Parameters.AddWithValue("@Id", evento.IdEvento);
             command.Parameters.AddWithValue("@Descricao", evento.Descricao);
             command.Parameters.AddWithValue("@DataEvento", evento.DataEvento);
             command.Parameters.AddWithValue("@NomeEvento", evento.NomeEvento);
