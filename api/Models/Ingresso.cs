@@ -27,4 +27,7 @@ public class Ingresso
 
     [Column("data_utilizacao")]
     public DateTime? DataUtilizacao { get; set; }
+
+    [Column("codigo_qr")]
+    public string? CodigoQr { get; set; }
 }

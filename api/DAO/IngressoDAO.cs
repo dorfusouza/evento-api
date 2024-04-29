@@ -26,7 +26,8 @@ public class IngressoDao
                 Status = reader.GetString("status"),
                 Tipo = reader.GetString("tipo"),
                 Valor = reader.GetDecimal("valor"),
-                DataUtilizacao = reader.GetDateTime("data_utilizacao")
+                DataUtilizacao = reader.GetDateTime("data_utilizacao"),
+                CodigoQr = reader.GetString("codigo_qr")
             };
             ingressos.Add(ingresso);
         }
@@ -127,7 +128,7 @@ public class IngressoDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO ingressos (lote_id, pedidos_id, pedidos_usuarios_id, status, tipo, data_utilizacao) " +
+            const string query = "INSERT INTO ingressos (lote_id, pedidos_id, pedidos_usuarios_id, status, tipo, data_utilizacao, valor, codigo_qr) " +
                                  "VALUES (@lote_id, @pedidos_id, @pedidos_usuarios_id, @status, @tipo, @data_utilizacao, @valor)";
 
             var command = new MySqlCommand(query, _connection);
@@ -138,6 +139,7 @@ public class IngressoDao
             command.Parameters.AddWithValue("@tipo", ingresso.Tipo);
             command.Parameters.AddWithValue("@data_utilizacao", ingresso.DataUtilizacao);
             command.Parameters.AddWithValue("@valor", ingresso.Valor);
+            command.Parameters.AddWithValue("@codigo_qr", ingresso.CodigoQr);
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)
@@ -167,8 +169,9 @@ public class IngressoDao
                                  "pedidos_usuarios_id = @pedidos_usuarios_id, " +
                                  "status = @status, " +
                                  "tipo = @tipo, " +
-                                 "data_utilizacao = @data_utilizacao " +
-                                 "valor = @valor"
+                                 "data_utilizacao = @data_utilizacao, " +
+                                 "valor = @valor, " +
+                                 "codigo_qr = @codigo_qr " +
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
@@ -179,6 +182,7 @@ public class IngressoDao
             command.Parameters.AddWithValue("@tipo", ingresso.Tipo);
             command.Parameters.AddWithValue("@data_utilizacao", ingresso.DataUtilizacao);
             command.Parameters.AddWithValue("@valor", ingresso.Valor);
+            command.Parameters.AddWithValue("@codigo_qr", ingresso.CodigoQr);
             command.Parameters.AddWithValue("@id", ingresso.IdIngresso);
             command.ExecuteNonQuery();
         }
