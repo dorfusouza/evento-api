@@ -22,6 +22,9 @@ public class Ingresso
     [Column("tipo")]
     public required string Tipo { get; set; }
 
+    [Column("valor")]
+    public required double Valor { get; set; }
+
     [Column("data_utilizacao")]
     public DateTime? DataUtilizacao { get; set; }
 }

@@ -64,7 +64,6 @@ public class LoteDao
         return lotes;
     }
 
-    //GetByEventoId
     public List<Lote?> GetByEventoId(int id)
     {
         List<Lote?> lotes;

@@ -25,6 +25,7 @@ public class IngressoDao
                 PedidosUsuariosId = reader.GetInt32("pedidos_usuarios_id"),
                 Status = reader.GetString("status"),
                 Tipo = reader.GetString("tipo"),
+                Valor = reader.GetDecimal("valor"),
                 DataUtilizacao = reader.GetDateTime("data_utilizacao")
             };
             ingressos.Add(ingresso);
@@ -127,7 +128,7 @@ public class IngressoDao
         {
             _connection.Open();
             const string query = "INSERT INTO ingressos (lote_id, pedidos_id, pedidos_usuarios_id, status, tipo, data_utilizacao) " +
-                                 "VALUES (@lote_id, @pedidos_id, @pedidos_usuarios_id, @status, @tipo, @data_utilizacao)";
+                                 "VALUES (@lote_id, @pedidos_id, @pedidos_usuarios_id, @status, @tipo, @data_utilizacao, @valor)";
 
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@lote_id", ingresso.LoteId);
@@ -136,6 +137,7 @@ public class IngressoDao
             command.Parameters.AddWithValue("@status", ingresso.Status);
             command.Parameters.AddWithValue("@tipo", ingresso.Tipo);
             command.Parameters.AddWithValue("@data_utilizacao", ingresso.DataUtilizacao);
+            command.Parameters.AddWithValue("@valor", ingresso.Valor);
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)
@@ -166,6 +168,7 @@ public class IngressoDao
                                  "status = @status, " +
                                  "tipo = @tipo, " +
                                  "data_utilizacao = @data_utilizacao " +
+                                 "valor = @valor"
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
@@ -175,6 +178,7 @@ public class IngressoDao
             command.Parameters.AddWithValue("@status", ingresso.Status);
             command.Parameters.AddWithValue("@tipo", ingresso.Tipo);
             command.Parameters.AddWithValue("@data_utilizacao", ingresso.DataUtilizacao);
+            command.Parameters.AddWithValue("@valor", ingresso.Valor);
             command.Parameters.AddWithValue("@id", ingresso.IdIngresso);
             command.ExecuteNonQuery();
         }

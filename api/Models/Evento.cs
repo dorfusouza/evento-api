@@ -20,6 +20,9 @@ public class Evento
     [Column("ativo")]
     public required int Ativo { get; set; }
 
+    [Column("total_ingressos")]
+    public required int TotalIngressos { get; set; }
+
     [Column("nome_evento")]
     public required string NomeEvento { get; set; }
 }
