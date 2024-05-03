@@ -27,7 +27,7 @@ public class EventoDao
                 TotalIngressos = reader.GetInt32("total_ingressos"),
                 Local = reader.GetString("local"),
                 Ativo = reader.GetInt32("ativo"),
-                Imagem = reader.GetBytes("image")
+                //Imagem = reader.GetBytes("image")
             };
             eventos.Add(evento);
         }

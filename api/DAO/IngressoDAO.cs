@@ -259,4 +259,33 @@ public class IngressoDao
         }
     }
 
+    public Ingresso? GetIngressoByCodigoQR(string codigo_qr){
+            Ingresso? ingresso = null!;
+            
+            try
+            {
+                _connection.Open();
+                string query = "SELECT * FROM db_evento.ingressos WHERE codigo_qr = @codigo_qr";
+            
+                MySqlCommand command = new MySqlCommand(query, _connection);
+                command.Parameters.AddWithValue("@codigo_qr", codigo_qr);
+                ingresso = ReadAll(command).FirstOrDefault();
+            }
+            catch (MySqlException ex)
+            {
+                // Aqui você pode tratar exceções específicas do MySQL
+                Console.WriteLine($"Erro ao acessar o banco de dados MySQL: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Aqui você trata outras exceções gerais
+                Console.WriteLine($"Erro desconhecido: {ex.Message}");
+            }
+            finally
+            {
+                _connection.Close();
+        }
+        return ingresso;
+        }
+
 }
