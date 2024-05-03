@@ -175,7 +175,7 @@ public class LoteDao
                                  "evento_id = @evento_id, " +
                                  "valor_unitario = @valor_unitario, " +
                                  "quantidade_total = @quantidade_total, " +
-                                 "saldo = @quantidade_total, " +
+                                 "saldo = @saldo, " +
                                  "ativo = @ativo, " +
                                  "data_final = @data_final, " +
                                  "data_inicio = @data_final, " +
@@ -186,7 +186,7 @@ public class LoteDao
 
             command.Parameters.AddWithValue("@evento_id", lote.EventoId);
             command.Parameters.AddWithValue("@valor_unitario", lote.ValorUnitario);
-            command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
+            command.Parameters.AddWithValue("@quantidade_total", lote.QuantidadeTotal);
             command.Parameters.AddWithValue("@saldo", lote.Saldo);
             command.Parameters.AddWithValue("@ativo", lote.Ativo);
             command.Parameters.AddWithValue("@data_final", lote.DataFinal);
@@ -238,7 +238,6 @@ public class LoteDao
         }
     }
 
-    //delete by evento id
     public void DeleteByEventoId(int idEvento)
     {
         try

@@ -5,9 +5,11 @@
 public class LoteController : ControllerBase
 {
     private readonly LoteDao _loteDao;
+    private readonly EventoDao _eventoDao;
     public LoteController()
     {
         _loteDao = new LoteDao();
+        _eventoDao = new EventoDao();
     }
 
     [HttpGet]
@@ -39,7 +41,7 @@ public class LoteController : ControllerBase
         if (lote.DataFinal == null) lote.DataFinal = DateTime.Now;
         if (lote.DataInicio == null) lote.DataInicio = DateTime.Now;
         Lote createdLote = _loteDao.Create(lote);
-
+        _eventoDao.UpdateTotalIngressos(lote.EventoId);
         return Ok(createdLote);
     }
 
@@ -49,7 +51,8 @@ public class LoteController : ControllerBase
         if (id != lote.IdLote) return BadRequest();
         if (_loteDao.GetById(id) == null) return NotFound();
         _loteDao.Update(lote);
-        return NoContent();
+        _eventoDao.UpdateTotalIngressos(lote.EventoId);
+        return Ok(_loteDao.GetById(id));
     }
 
     [HttpDelete("{id:int}")]
@@ -57,6 +60,7 @@ public class LoteController : ControllerBase
     {
         if (_loteDao.GetById(id) == null) return NotFound();
         _loteDao.Delete(id);
+        _eventoDao.UpdateTotalIngressos(_loteDao.GetById(id).EventoId);
         return NoContent();
     }
 
@@ -64,6 +68,7 @@ public class LoteController : ControllerBase
     public IActionResult DeleteByEventoId(int id)
     {
         _loteDao.DeleteByEventoId(id);
+        _eventoDao.UpdateTotalIngressos(0);
         return NoContent();
     }
 }

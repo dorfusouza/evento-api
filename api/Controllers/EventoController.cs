@@ -29,7 +29,9 @@ public class EventoController : ControllerBase
     [HttpPost]
     public IActionResult Set(Evento evento)
     {
-        int id = _eventoDao.Create(evento);
+        _eventoDao.Create(evento);
+
+        int id = _eventoDao.Read().Last().IdEvento;
         return Ok(id);
     }
 

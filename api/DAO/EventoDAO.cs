@@ -208,4 +208,41 @@ public class EventoDao
             _connection.Close();
         }
     }
+
+    public void UpdateTotalIngressos(int EventoId)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT SUM(quantidade_total) as total FROM lote WHERE evento_id = @EventoId";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@EventoId", EventoId);
+
+            using var reader = command.ExecuteReader();
+            if (!reader.HasRows) return;
+            reader.Read();
+            var total = reader.GetInt32("total");
+            _connection.Close();
+            _connection.Open();
+            const string queryUpdate = "UPDATE evento SET total_ingressos = @Total WHERE id = @EventoId";
+            var commandUpdate = new MySqlCommand(queryUpdate, _connection);
+            commandUpdate.Parameters.AddWithValue("@Total", total);
+            commandUpdate.Parameters.AddWithValue("@EventoId", EventoId);
+            commandUpdate.ExecuteNonQuery();
+        }
+        catch (MySqlException ex)
+        {
+            Console.WriteLine($"Erro do Banco: {ex.Message} ");
+        }
+
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro desconhecido{ex.Message}");
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
 }

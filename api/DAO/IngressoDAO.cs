@@ -25,7 +25,7 @@ public class IngressoDao
                 PedidosUsuariosId = reader.GetInt32("pedidos_usuarios_id"),
                 Status = reader.GetString("status"),
                 Tipo = reader.GetString("tipo"),
-                Valor = reader.GetDecimal("valor"),
+                Valor = reader.GetDouble("valor"),
                 DataUtilizacao = reader.GetDateTime("data_utilizacao"),
                 CodigoQr = reader.GetString("codigo_qr")
             };
@@ -129,7 +129,7 @@ public class IngressoDao
         {
             _connection.Open();
             const string query = "INSERT INTO ingressos (lote_id, pedidos_id, pedidos_usuarios_id, status, tipo, data_utilizacao, valor, codigo_qr) " +
-                                 "VALUES (@lote_id, @pedidos_id, @pedidos_usuarios_id, @status, @tipo, @data_utilizacao, @valor)";
+                                 "VALUES (@lote_id, @pedidos_id, @pedidos_usuarios_id, @status, @tipo, @data_utilizacao, @valor, @codigo_qr)";
 
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@lote_id", ingresso.LoteId);
