@@ -49,23 +49,28 @@ public class UsuarioController : ControllerBase
         _usuarioDao.Delete(id);
         return NoContent();
     }
-
     [HttpPost("login")]
     public IActionResult GetLoginAsync([FromBody] UsuarioCredenciais credentials)
     {
+        if (credentials == null || string.IsNullOrEmpty(credentials.email) || string.IsNullOrEmpty(credentials.senha))
+        {
+            return BadRequest("Credenciais inválidas");
+        }
+
         var usuario = _usuarioDao.GetEmail(credentials.email);
 
         if (usuario == null)
         {
-            return Unauthorized("E-mail não existe");
+            return NotFound("Usuário não encontrado");
         }
-        else if (usuario.Senha != credentials.senha)
+
+        if (usuario.Senha != credentials.senha)
         {
             return Unauthorized("Senha incorreta");
         }
-        else
-        {
-            return Ok(usuario);
-        }
+
+        return Ok(usuario);
     }
+
 }
+
