@@ -52,28 +52,23 @@ public class UsuarioController : ControllerBase
     [HttpPost("login")]
     public IActionResult GetLoginAsync([FromBody] UsuarioCredenciais credentials)
     {
-        // Verifica se as credenciais foram fornecidas corretamente
         if (credentials == null || string.IsNullOrEmpty(credentials.email) || string.IsNullOrEmpty(credentials.senha))
         {
             return BadRequest("Credenciais inválidas");
         }
 
-        // Busca o usuário no banco de dados pelo e-mail
         var usuario = _usuarioDao.GetEmail(credentials.email);
 
-        // Verifica se o usuário foi encontrado
         if (usuario == null)
         {
             return NotFound("Usuário não encontrado");
         }
 
-        // Verifica se a senha fornecida corresponde à senha do usuário no banco de dados
         if (usuario.Senha != credentials.senha)
         {
             return Unauthorized("Senha incorreta");
         }
 
-        // Se chegou até aqui, as credenciais são válidas e o usuário pode ser autenticado
         return Ok(usuario);
     }
 
