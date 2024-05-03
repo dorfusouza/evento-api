@@ -27,7 +27,8 @@ public class LoteDao
                 Ativo = reader.GetInt32("ativo"),
                 DataFinal = reader.GetDateTime("data_final"),
                 DataInicio = reader.GetDateTime("data_inicio"),
-                Tipo = reader.GetString("tipo")
+                Tipo = reader.GetString("tipo"),
+                NomeLote = reader.GetString("nome_lote")
             };
             lotes.Add(lote);
         }
@@ -132,8 +133,8 @@ public class LoteDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total, saldo, ativo, data_final, data_inicio, tipo) " +
-                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo, @ativo, @data_final, @data_inicio, @tipo)";
+            const string query = "INSERT INTO lote (evento_id, valor_unitario, quantidade_total, saldo, ativo, data_final, data_inicio, tipo, nome_lote) " +
+                                 "VALUES (@evento_id, @valor_unitario, @quantidade_total, @saldo, @ativo, @data_final, @data_inicio, @tipo, @nome_lote)";
 
             var command = new MySqlCommand(query, _connection);
 
@@ -145,6 +146,7 @@ public class LoteDao
             command.Parameters.AddWithValue("@data_final", lote.DataFinal);
             command.Parameters.AddWithValue("@data_inicio", lote.DataInicio);
             command.Parameters.AddWithValue("@tipo", lote.Tipo);
+            command.Parameters.AddWithValue("@nome_lote", lote.NomeLote);
 
             command.ExecuteNonQuery();
             createdLote.IdLote = (int)command.LastInsertedId;
@@ -179,7 +181,8 @@ public class LoteDao
                                  "ativo = @ativo, " +
                                  "data_final = @data_final, " +
                                  "data_inicio = @data_final, " +
-                                 "tipo = @tipo " +
+                                 "tipo = @tipo, " +
+                                 "nome_lote = @nome_lote " +
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
@@ -192,6 +195,7 @@ public class LoteDao
             command.Parameters.AddWithValue("@data_final", lote.DataFinal);
             command.Parameters.AddWithValue("@data_inicio", lote.DataInicio);
             command.Parameters.AddWithValue("@tipo", lote.Tipo);
+            command.Parameters.AddWithValue("@nome_lote", lote.NomeLote);
             command.Parameters.AddWithValue("@id", lote.IdLote);
             command.ExecuteNonQuery();
         }

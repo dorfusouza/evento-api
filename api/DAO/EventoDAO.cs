@@ -26,7 +26,8 @@ public class EventoDao
                 ImagemUrl = reader.GetString("imagem_url"),
                 TotalIngressos = reader.GetInt32("total_ingressos"),
                 Local = reader.GetString("local"),
-                Ativo = reader.GetInt32("ativo")
+                Ativo = reader.GetInt32("ativo"),
+                Imagem = reader.GetBytes("image")
             };
             eventos.Add(evento);
         }
@@ -104,8 +105,8 @@ public class EventoDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO evento (id, descricao, data_evento, nome_evento, imagem_url, local, ativo, total_ingressos) " +
-                                 "VALUES(@Id,  @Descricao, @DataEvento, @NomeEvento, @ImagemUrl, @Local, @Ativo, @TotalIngressos)";
+            const string query = "INSERT INTO evento (id, descricao, data_evento, nome_evento, imagem_url, local, ativo, total_ingressos, image) " +
+                                 "VALUES(@Id,  @Descricao, @DataEvento, @NomeEvento, @ImagemUrl, @Local, @Ativo, @TotalIngressos, @Imagem)";
 
             using var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@Id", evento.IdEvento);
@@ -116,6 +117,7 @@ public class EventoDao
             command.Parameters.AddWithValue("@Local", evento.Local);
             command.Parameters.AddWithValue("@Ativo", evento.Ativo);
             command.Parameters.AddWithValue("@TotalIngressos", evento.TotalIngressos);
+            command.Parameters.AddWithValue("@Imagem", evento.Imagem);
 
             command.ExecuteNonQuery();
             id = (int)command.LastInsertedId;
@@ -149,7 +151,8 @@ public class EventoDao
                                  "imagem_url = @ImagemUrl, " +
                                  "local = @Local, " +
                                  "ativo = @Ativo, " +
-                                 "total_ingressos = @TotalIngressos " +
+                                 "total_ingressos = @TotalIngressos, " +
+                                 "image = @Imagem " +
                                  "WHERE id = @Id";
 
             using var command = new MySqlCommand(query, _connection);
@@ -161,6 +164,7 @@ public class EventoDao
             command.Parameters.AddWithValue("@Local", evento.Local);
             command.Parameters.AddWithValue("@Ativo", evento.Ativo);
             command.Parameters.AddWithValue("@TotalIngressos", evento.TotalIngressos);
+            command.Parameters.AddWithValue("@Imagem", evento.Imagem);
             command.Parameters.AddWithValue("@Id", id);
 
             command.ExecuteNonQuery();

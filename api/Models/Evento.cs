@@ -1,4 +1,6 @@
-﻿namespace api.Models;
+﻿using System.Data.SqlTypes;
+
+namespace api.Models;
 
 public class Evento
 {
@@ -25,4 +27,7 @@ public class Evento
 
     [Column("nome_evento")]
     public required string NomeEvento { get; set; }
+
+   // [Column("image")]
+    public byte[]? Imagem { get; set; }
 }
