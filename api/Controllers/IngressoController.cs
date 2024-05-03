@@ -26,6 +26,22 @@ public class IngressoController : ControllerBase
         return Ok(ingressos);
     }
 
+    [HttpGet("Pedido/{id:int}")]
+    public IActionResult GetPedidoById(int id)
+    {
+        var ingressos = _ingressoDao.ReadByPedidoId(id);
+        if (ingressos == null) return NotFound();
+        return Ok(ingressos);
+    }
+
+    [HttpGet("Usuario/{id:int}")]
+    public IActionResult GetUsuarioById(int id)
+    {
+        var ingressos = _ingressoDao.ReadByUsuarioId(id);
+        if (ingressos == null) return NotFound();
+        return Ok(ingressos);
+    }
+
     [HttpPost]
     public IActionResult Post([FromBody] Ingresso ingresso)
     {

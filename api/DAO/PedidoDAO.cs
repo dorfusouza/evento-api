@@ -137,6 +137,37 @@ public class PedidoDao
         return pedido;
     }
 
+     public List<Pedido> ReadPedidosByUsuarioId(int id)
+    {
+        List<Pedido> lPedidos;
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT * FROM pedidos WHERE usuarios_id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", id);
+            lPedidos = ReadAll(command);
+            
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return lPedidos;
+    }
+
     public void Create(Pedido pedido)
     {
         const string query = "INSERT INTO pedidos (usuarios_id, data, total, quantidade, forma_pagamento, status, validacao_id_usuario) " +

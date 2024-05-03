@@ -92,6 +92,35 @@ public class IngressoDao
         return ingressos;
     }
 
+    public List<Ingresso?> ReadByUsuarioId(int usuarioId)
+    {
+        List<Ingresso?> ingressos;
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT * FROM ingressos WHERE pedidos_usuarios_id = @usuarios_id";
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@pedidos_usuarios_id", usuarioId);
+            ingressos = ReadAll(command);
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return ingressos;
+    }
+
     public Ingresso? ReadById(int id)
     {
         Ingresso? ingresso;

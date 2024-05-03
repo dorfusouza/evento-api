@@ -26,6 +26,14 @@ public class PedidoController : ControllerBase
         return Ok(pedido);
     }
 
+    [HttpGet("Usuario/{id:int}")]
+    public IActionResult GetByUsuarioId(int id)
+    {
+        var pedidos = _pedidoDao.ReadPedidosByUsuarioId(id);
+        if (pedidos == null) return NotFound();
+        return Ok(pedidos);
+    }
+
     [HttpPost]
     public IActionResult Post([FromBody] Pedido pedido)
     {
