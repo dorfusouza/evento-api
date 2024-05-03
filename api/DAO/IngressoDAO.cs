@@ -100,7 +100,7 @@ public class IngressoDao
             _connection.Open();
             const string query = "SELECT * FROM ingressos WHERE pedidos_usuarios_id = @usuarios_id";
             var command = new MySqlCommand(query, _connection);
-            command.Parameters.AddWithValue("@pedidos_usuarios_id", usuarioId);
+            command.Parameters.AddWithValue("@usuarios_id", usuarioId);
             ingressos = ReadAll(command);
         }
         catch (MySqlException e)
