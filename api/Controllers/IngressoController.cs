@@ -65,4 +65,21 @@ public class IngressoController : ControllerBase
         _ingressoDao.Delete(id);
         return NoContent();
     }
+
+    
+
+    [HttpPost("codigo_qr")]
+    public IActionResult GetLoginAsync([FromBody] IngressoCredenciais credentials)
+    {
+        var ingresso = _ingressoDao.GetQrcode(credentials.codigo_qr);
+
+        if (ingresso == null)
+        {
+            return Unauthorized("Qr Code não Existe");
+        }
+        else
+        {
+            return Ok(ingresso);
+        }
+    }
 }
