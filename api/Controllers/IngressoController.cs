@@ -68,10 +68,10 @@ public class IngressoController : ControllerBase
 
     
 
-    [HttpPost("codigo_qr")]
-    public IActionResult GetLoginAsync([FromBody] IngressoCredenciais credentials)
+    [HttpPost("Verifica/{codigo_qr}")]
+    public IActionResult GetLoginAsync(string codigo_qr)
     {
-        var ingresso = _ingressoDao.GetQrcode(credentials.codigo_qr);
+        var ingresso = _ingressoDao.GetIngressoByCodigoQR(codigo_qr);
 
         if (ingresso == null)
         {
@@ -79,7 +79,19 @@ public class IngressoController : ControllerBase
         }
         else
         {
-            return Ok(ingresso);
+            if(ingresso.Status == "pendente")
+                return Unauthorized("Ingresso não pago!");
+            else if(ingresso.Status == "valido")
+            {
+                ingresso.Status = "utilizado";
+                ingresso.DataUtilizacao = DateTime.Now.Date;
+                _ingressoDao.Update(ingresso);
+                return Ok(new { mensagem = "Acesso concedido!", ingresso }); 
+            }
+            else
+            {
+                return Unauthorized(new { mensagem = "Qr Code não Existe", codigo_qr});
+            }
         }
     }
 }
