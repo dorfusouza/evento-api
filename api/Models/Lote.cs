@@ -29,6 +29,6 @@ public class Lote
     [Column("tipo")]
     public required string Tipo { get; set; }
 
-    [Column("nome_lote")]
-    public required string NomeLote { get; set; }
+    [Column("nome")]
+    public required string Nome { get; set; }
 }
