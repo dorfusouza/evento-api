@@ -84,13 +84,13 @@ public class IngressoController : ControllerBase
             else if(ingresso.Status == "valido")
             {
                 ingresso.Status = "utilizado";
-                ingresso.DataUtilizacao = DateTime.Now.Date;
+                ingresso.DataUtilizacao = DateTime.Now;
                 _ingressoDao.Update(ingresso);
                 return Ok(new { mensagem = "Acesso concedido!", ingresso }); 
             }
             else
             {
-                return Unauthorized(new { mensagem = "Qr Code não Existe", codigo_qr});
+                return Unauthorized(new { mensagem = "Qr Code Inválido!", codigo_qr});
             }
         }
     }
