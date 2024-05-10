@@ -37,7 +37,7 @@ public class PedidoController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] Pedido pedido)
     {
-        newPedido = _pedidoDao.Create(pedido);
+        Pedido newPedido = _pedidoDao.Create(pedido);
         return Ok(newPedido);
     }
 

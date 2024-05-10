@@ -14,7 +14,7 @@ public class ValidacaoController : ControllerBase
     [HttpGet("Verifica/{codigo_qr}")]
     public IActionResult GetIngressoByCodigoQR(string codigo_qr)
     {
-        var ingresso = _ingressoDAO.GetIngressoByCodigoQR(codigo_qr);
+        var ingresso = _ingressoDAO.GetIngressoByCodigoQr(codigo_qr);
         if (ingresso == null)
             return NotFound();
         else
