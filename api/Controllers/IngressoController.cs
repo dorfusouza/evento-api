@@ -43,10 +43,13 @@ public class IngressoController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Post([FromBody] Ingresso ingresso)
+    public IActionResult Post([FromBody] List<Ingresso> ingressos)
     {
-        _ingressoDao.Create(ingresso);
-        return CreatedAtAction(nameof(GetById), new { id = ingresso.IdIngresso }, ingresso);
+        foreach (var ingresso in ingressos)
+        {
+            _ingressoDao.Create(ingresso);
+        }
+        return CreatedAtAction(nameof(GetById), new { id = ingressos[0].IdIngresso }, ingressos);
     }
 
     [HttpPut("{id:int}")]
@@ -71,7 +74,7 @@ public class IngressoController : ControllerBase
     [HttpPost("Verifica/{codigo_qr}")]
     public IActionResult GetLoginAsync(string codigo_qr)
     {
-        var ingresso = _ingressoDao.GetIngressoByCodigoQR(codigo_qr);
+        var ingresso = _ingressoDao.GetIngressoByCodigoQr(codigo_qr);
 
         if (ingresso == null)
         {

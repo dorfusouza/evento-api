@@ -263,7 +263,7 @@ public class IngressoDao
         }
     }
 
-    public Ingresso? GetIngressoByCodigoQR(string codigo_qr)
+    public Ingresso? GetIngressoByCodigoQr(string codigo_qr)
     {
         Ingresso? ingresso = null!;
 
