@@ -37,8 +37,8 @@ public class PedidoController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] Pedido pedido)
     {
-        _pedidoDao.Create(pedido);
-        return CreatedAtAction(nameof(GetById), new { id = pedido.IdPedido }, pedido);
+        newPedido = _pedidoDao.Create(pedido);
+        return Ok(newPedido);
     }
 
     [HttpPut("{id:int}")]
