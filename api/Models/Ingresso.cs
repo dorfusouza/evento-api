@@ -30,4 +30,7 @@ public class Ingresso
 
     [Column("codigo_qr")]
     public string? CodigoQr { get; set; }
+
+    [Column("ativo")]
+    public int? Ativo { get; set; }
 }

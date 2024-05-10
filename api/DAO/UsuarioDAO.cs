@@ -184,7 +184,7 @@ public class UsuarioDao
         }
     }
 
-    public Usuario GetEmail(string email)
+    public Usuario? GetEmail(string email)
     {
         Usuario? usuario = null;
 

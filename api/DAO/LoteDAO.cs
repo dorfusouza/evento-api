@@ -23,7 +23,7 @@ public class LoteDao
                 EventoId = reader.GetInt32("evento_id"),
                 ValorUnitario = reader.GetDouble("valor_unitario"),
                 QuantidadeTotal = reader.GetInt32("quantidade_total"),
-                Saldo = reader.GetInt32("quantidade_total"),
+                Saldo = reader.GetInt32("saldo"),
                 Ativo = reader.GetInt32("ativo"),
                 DataFinal = reader.GetDateTime("data_final"),
                 DataInicio = reader.GetDateTime("data_inicio"),
@@ -140,7 +140,7 @@ public class LoteDao
 
             command.Parameters.AddWithValue("@evento_id", lote.EventoId);
             command.Parameters.AddWithValue("@valor_unitario", lote.ValorUnitario);
-            command.Parameters.AddWithValue("@quantidade_total", lote.Saldo);
+            command.Parameters.AddWithValue("@quantidade_total", lote.QuantidadeTotal);
             command.Parameters.AddWithValue("@saldo", lote.Saldo);
             command.Parameters.AddWithValue("@ativo", lote.Ativo);
             command.Parameters.AddWithValue("@data_final", lote.DataFinal);

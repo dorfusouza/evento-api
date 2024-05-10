@@ -27,7 +27,8 @@ public class IngressoDao
                 Tipo = reader.GetString("tipo"),
                 Valor = reader.GetDouble("valor"),
                 DataUtilizacao = reader.GetDateTime("data_utilizacao"),
-                CodigoQr = reader.GetString("codigo_qr")
+                CodigoQr = reader.GetString("codigo_qr"),
+                Ativo = reader.GetInt32("ativo")
             };
             ingressos.Add(ingresso);
         }
@@ -157,8 +158,8 @@ public class IngressoDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO ingressos (lote_id, pedidos_id, pedidos_usuarios_id, status, tipo, data_utilizacao, valor, codigo_qr) " +
-                                 "VALUES (@lote_id, @pedidos_id, @pedidos_usuarios_id, @status, @tipo, @data_utilizacao, @valor, @codigo_qr)";
+            const string query = "INSERT INTO ingressos (lote_id, pedidos_id, pedidos_usuarios_id, status, tipo, data_utilizacao, valor, codigo_qr, ativo) " +
+                                 "VALUES (@lote_id, @pedidos_id, @pedidos_usuarios_id, @status, @tipo, @data_utilizacao, @valor, @codigo_qr, @ativo)";
 
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@lote_id", ingresso.LoteId);
@@ -169,6 +170,7 @@ public class IngressoDao
             command.Parameters.AddWithValue("@data_utilizacao", ingresso.DataUtilizacao);
             command.Parameters.AddWithValue("@valor", ingresso.Valor);
             command.Parameters.AddWithValue("@codigo_qr", ingresso.CodigoQr);
+            command.Parameters.AddWithValue("@ativo", ingresso.Ativo);
             command.ExecuteNonQuery();
         }
         catch (MySqlException e)
@@ -200,7 +202,8 @@ public class IngressoDao
                                  "tipo = @tipo, " +
                                  "data_utilizacao = @data_utilizacao, " +
                                  "valor = @valor, " +
-                                 "codigo_qr = @codigo_qr " +
+                                 "codigo_qr = @codigo_qr, " +
+                                 "ativo = @ativo " +
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
@@ -212,6 +215,7 @@ public class IngressoDao
             command.Parameters.AddWithValue("@data_utilizacao", ingresso.DataUtilizacao);
             command.Parameters.AddWithValue("@valor", ingresso.Valor);
             command.Parameters.AddWithValue("@codigo_qr", ingresso.CodigoQr);
+            command.Parameters.AddWithValue("@ativo", ingresso.Ativo);
             command.Parameters.AddWithValue("@id", ingresso.IdIngresso);
             command.ExecuteNonQuery();
         }
@@ -259,33 +263,34 @@ public class IngressoDao
         }
     }
 
-    public Ingresso? GetIngressoByCodigoQR(string codigo_qr){
-            Ingresso? ingresso = null!;
-            
-            try
-            {
-                _connection.Open();
-                string query = "SELECT * FROM db_evento.ingressos WHERE codigo_qr = @codigo_qr";
-            
-                MySqlCommand command = new MySqlCommand(query, _connection);
-                command.Parameters.AddWithValue("@codigo_qr", codigo_qr);
-                ingresso = ReadAll(command).FirstOrDefault();
-            }
-            catch (MySqlException ex)
-            {
-                // Aqui você pode tratar exceções específicas do MySQL
-                Console.WriteLine($"Erro ao acessar o banco de dados MySQL: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                // Aqui você trata outras exceções gerais
-                Console.WriteLine($"Erro desconhecido: {ex.Message}");
-            }
-            finally
-            {
-                _connection.Close();
+    public Ingresso? GetIngressoByCodigoQR(string codigo_qr)
+    {
+        Ingresso? ingresso = null!;
+
+        try
+        {
+            _connection.Open();
+            string query = "SELECT * FROM db_evento.ingressos WHERE codigo_qr = @codigo_qr";
+
+            MySqlCommand command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@codigo_qr", codigo_qr);
+            ingresso = ReadAll(command).FirstOrDefault();
+        }
+        catch (MySqlException ex)
+        {
+            // Aqui você pode tratar exceções específicas do MySQL
+            Console.WriteLine($"Erro ao acessar o banco de dados MySQL: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Aqui você trata outras exceções gerais
+            Console.WriteLine($"Erro desconhecido: {ex.Message}");
+        }
+        finally
+        {
+            _connection.Close();
         }
         return ingresso;
-        }
+    }
 
 }

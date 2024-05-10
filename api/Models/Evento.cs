@@ -29,5 +29,5 @@ public class Evento
     public required string NomeEvento { get; set; }
 
    // [Column("image")]
-    public byte[]? Imagem { get; set; }
+    public byte? Imagem { get; set; }
 }
