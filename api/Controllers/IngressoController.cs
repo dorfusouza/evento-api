@@ -69,8 +69,6 @@ public class IngressoController : ControllerBase
         return NoContent();
     }
 
-    
-
     [HttpPost("Verifica/{codigo_qr}")]
     public IActionResult GetLoginAsync(string codigo_qr)
     {
@@ -96,5 +94,26 @@ public class IngressoController : ControllerBase
                 return Unauthorized(new { mensagem = "Qr Code Inválido!", codigo_qr});
             }
         }
+    }
+
+    [HttpGet("quantidadeByTipoByEvento/{id}")]
+        public IActionResult GetQuatidadeIngressoByTipoByEvento(int id) // Id do evento desejado
+        {
+        List<string> tiposIngressos = _ingressoDao.GetAllTiposByIdEvento(id);
+        Dictionary<string, int> quantidadePorTipo = new Dictionary<string, int>();
+        foreach (var tipo in tiposIngressos)
+        {
+            var quantidade = _ingressoDao.CountIngressoByTipo(tipo);
+            quantidadePorTipo.Add(tipo, quantidade);
+        }
+        return Ok(quantidadePorTipo);
+    }
+
+    [HttpGet("descricao/{id:int}")]
+    public IActionResult GetDescricaoEventoByIdIngresso(int id)
+    {
+        var descricao = _ingressoDao.GetNomeEventoByIdIngresso(id);
+        if (descricao == null) return NotFound();
+        return Ok(descricao);
     }
 }

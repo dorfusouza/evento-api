@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\projetos\\projeto-ingresso-equipe4\\api\\api.csproj": {}
+    "C:\\Users\\Suporte\\Desktop\\Repositorios\\projeto-ingresso-equipe4\\api\\api.csproj": {}
   },
   "projects": {
-    "C:\\projetos\\projeto-ingresso-equipe4\\api\\api.csproj": {
+    "C:\\Users\\Suporte\\Desktop\\Repositorios\\projeto-ingresso-equipe4\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\projetos\\projeto-ingresso-equipe4\\api\\api.csproj",
+        "projectUniqueName": "C:\\Users\\Suporte\\Desktop\\Repositorios\\projeto-ingresso-equipe4\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\projetos\\projeto-ingresso-equipe4\\api\\api.csproj",
-        "packagesPath": "C:\\Users\\Lara.Puga\\.nuget\\packages\\",
-        "outputPath": "C:\\projetos\\projeto-ingresso-equipe4\\api\\obj\\",
+        "projectPath": "C:\\Users\\Suporte\\Desktop\\Repositorios\\projeto-ingresso-equipe4\\api\\api.csproj",
+        "packagesPath": "C:\\Users\\Suporte\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Suporte\\Desktop\\Repositorios\\projeto-ingresso-equipe4\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Lara.Puga\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Suporte\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -75,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
