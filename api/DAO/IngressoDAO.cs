@@ -359,82 +359,82 @@ public class IngressoDao
         }
 
         return descricaoEvento;
-}  
+    }
 
-public List<string> GetAllTiposByIdEvento(int id)
-{
-    List<string> tiposIngressos = new List<string>();
-    try
+    public List<string> GetAllTiposByIdEvento(int id)
     {
-        _connection.Open();
-        const string query = "SELECT DISTINCT ingressos.tipo " +
-                             "FROM ingressos " +
-                             "JOIN lote ON lote.id = ingressos.lote_id " +
-                             "JOIN evento ON evento.id = lote.evento_id " +
-                             "WHERE evento.id = @IdEvento;";
-
-        var command = new MySqlCommand(query, _connection);
-        command.Parameters.AddWithValue("@IdEvento", id);
-        using (var reader = command.ExecuteReader())
+        List<string> tiposIngressos = new List<string>();
+        try
         {
-            while (reader.Read())
+            _connection.Open();
+            const string query = "SELECT DISTINCT ingressos.tipo " +
+                                 "FROM ingressos " +
+                                 "JOIN lote ON lote.id = ingressos.lote_id " +
+                                 "JOIN evento ON evento.id = lote.evento_id " +
+                                 "WHERE evento.id = @IdEvento;";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@IdEvento", id);
+            using (var reader = command.ExecuteReader())
             {
-                tiposIngressos.Add(reader.GetString("tipo"));
+                while (reader.Read())
+                {
+                    tiposIngressos.Add(reader.GetString("tipo"));
+                }
             }
         }
-    }
-    catch (MySqlException e)
-    {
-        Console.WriteLine(e);
-        throw;
-    }
-    catch (Exception e)
-    {
-        Console.WriteLine(e);
-        throw;
-    }
-    finally
-    {
-        _connection.Close();
-    }
-
-    return tiposIngressos;
-}
-
-
-public int CountIngressoByTipo(string tipo)
-{
-    int quantidadeIngresso = 0;
-    try
-    {
-        _connection.Open();
-        const string query = "SELECT COUNT(*) FROM ingressos WHERE tipo = @Tipo;";
-        var command = new MySqlCommand(query, _connection);
-        command.Parameters.AddWithValue("@Tipo", tipo);
-        using (var reader = command.ExecuteReader())
+        catch (MySqlException e)
         {
-            if (reader.Read())
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return tiposIngressos;
+    }
+
+
+    public int CountIngressoByTipo(string tipo)
+    {
+        int quantidadeIngresso = 0;
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT COUNT(*) FROM ingressos WHERE tipo = @Tipo;";
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@Tipo", tipo);
+            using (var reader = command.ExecuteReader())
             {
-                quantidadeIngresso = reader.GetInt32(0); // Lê o valor da primeira coluna (índice 0) do resultado da consulta
+                if (reader.Read())
+                {
+                    quantidadeIngresso = reader.GetInt32(0); // Lê o valor da primeira coluna (índice 0) do resultado da consulta
+                }
             }
         }
-    }
-    catch (MySqlException e)
-    {
-        Console.WriteLine(e);
-        throw;
-    }
-    catch (Exception e)
-    {
-        Console.WriteLine(e);
-        throw;
-    }
-    finally
-    {
-        _connection.Close();
-    }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
 
-    return quantidadeIngresso;
-}
+        return quantidadeIngresso;
+    }
 
 }

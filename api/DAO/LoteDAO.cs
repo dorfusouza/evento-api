@@ -268,4 +268,51 @@ public class LoteDao
             _connection.Close();
         }
     }
+
+    public List<List<int>> GetQuantidadeIngressos(int id)
+    {
+        List<List<int>> quantidadeIngressos = new();
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT lote.id, lote.quantidade_total, lote.saldo, COUNT(ingressos.id) as vendidos " +
+                                 "FROM lote " +
+                                 "LEFT JOIN ingressos ON lote.id = ingressos.lote_id " +
+                                 "WHERE lote.evento_id = @id " +
+                                 "GROUP BY lote.id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", id);
+
+            using var reader = command.ExecuteReader();
+            if (!reader.HasRows) return quantidadeIngressos;
+            while (reader.Read())
+            {
+                var lote = new List<int>
+                {
+                    reader.GetInt32("id"),
+                    reader.GetInt32("quantidade_total"),
+                    reader.GetInt32("saldo"),
+                    reader.GetInt32("vendidos"),
+                };
+                quantidadeIngressos.Add(lote);
+            }
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return quantidadeIngressos;
+    }
 }

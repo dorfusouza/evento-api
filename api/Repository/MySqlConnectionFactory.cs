@@ -8,7 +8,7 @@ public class MySqlConnectionFactory
                                         "port=3306;" +
                                         "database=db_evento;" +
                                         "uid=root;" +
-                                        "pwd=Senai@2024;";
+                                        "pwd=123456;";
         return new MySqlConnection(connectionString);
     }
 }

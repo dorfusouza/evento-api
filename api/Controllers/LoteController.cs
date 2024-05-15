@@ -71,4 +71,11 @@ public class LoteController : ControllerBase
         _eventoDao.UpdateTotalIngressos(0);
         return NoContent();
     }
+
+    [HttpGet("quantidadeIngressos/{id:int}")]
+    public IActionResult GetQuantidadeIngressos(int id)
+    {
+        var quantidade = _loteDao.GetQuantidadeIngressos(id);
+        return Ok(quantidade);
+    }
 }

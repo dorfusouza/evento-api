@@ -49,7 +49,7 @@ public class IngressoController : ControllerBase
         {
             _ingressoDao.Create(ingresso);
         }
-        return CreatedAtAction(nameof(GetById), new { id = ingressos[0].IdIngresso }, ingressos);
+        return Ok(ingressos);
     }
 
     [HttpPut("{id:int}")]
@@ -99,8 +99,15 @@ public class IngressoController : ControllerBase
     [HttpGet("quantidadeByTipoByEvento/{id}")]
         public IActionResult GetQuatidadeIngressoByTipoByEvento(int id) // Id do evento desejado
         {
-        List<string> tiposIngressos = _ingressoDao.GetAllTiposByIdEvento(id);
-        Dictionary<string, int> quantidadePorTipo = new Dictionary<string, int>();
+        //var tiposIngressos = _ingressoDao.GetAllTiposByIdEvento(id);
+        var tiposIngressos = new List<string>
+        {
+            "Colaborador",
+            "Aluno",
+            "Comunidade",
+            "Infantil",
+        };
+        var quantidadePorTipo = new Dictionary<string, int>();
         foreach (var tipo in tiposIngressos)
         {
             var quantidade = _ingressoDao.CountIngressoByTipo(tipo);
