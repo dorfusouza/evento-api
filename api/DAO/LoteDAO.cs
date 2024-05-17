@@ -315,4 +315,32 @@ public class LoteDao
 
         return quantidadeIngressos;
     }
+
+    public void UpdateSaldo(int idLote, int quantidade)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "UPDATE lote SET saldo = saldo - @quantidade WHERE id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@quantidade", quantidade);
+            command.Parameters.AddWithValue("@id", idLote);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
 }

@@ -152,7 +152,7 @@ public class EventoDao
                                  "local = @Local, " +
                                  "ativo = @Ativo, " +
                                  "total_ingressos = @TotalIngressos, " +
-                                 "imagem = @Imagem " +
+                                 "image = @Imagem " +
                                  "WHERE id = @Id";
 
             using var command = new MySqlCommand(query, _connection);

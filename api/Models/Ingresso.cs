@@ -2,8 +2,6 @@
 
 public class Ingresso
 {
-    // Pega os valores da tabela Ingresso
-
     [Column("id")]
     public required int IdIngresso { get; set; }
 

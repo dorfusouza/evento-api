@@ -5,10 +5,12 @@
 public class IngressoController : ControllerBase
 {
     private readonly IngressoDao _ingressoDao;
+    private readonly LoteDao _loteDao;
 
     public IngressoController()
     {
         _ingressoDao = new IngressoDao();
+        _loteDao = new LoteDao();
     }
 
     [HttpGet]
@@ -45,10 +47,15 @@ public class IngressoController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] List<Ingresso> ingressos)
     {
+        var ingressosComprados = 0;
         foreach (var ingresso in ingressos)
         {
             _ingressoDao.Create(ingresso);
+            ingressosComprados += 1;
         }
+
+        var lote = _loteDao.GetById(ingressos[0].LoteId);
+        _loteDao.UpdateSaldo(lote.IdLote, ingressosComprados);
         return Ok(ingressos);
     }
 
