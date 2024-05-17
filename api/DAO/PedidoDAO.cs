@@ -172,12 +172,11 @@ public class PedidoDao
     {
         const string query = "INSERT INTO pedidos (usuarios_id, data, total, quantidade, forma_pagamento, status, validacao_id_usuario) " +
                              "values (@usuarios_id, @data_cadastro, @total, @quantidade, @forma_pagamento, @status, @validacao_id_usuario)";
-
-        Pedido? newPedido;
         try
         {
             _connection.Open();
             var command = new MySqlCommand(query, _connection);
+        
             command.Parameters.AddWithValue("@usuarios_id", pedido.UsuariosId);
             command.Parameters.AddWithValue("@data_cadastro", pedido.DataCadastro);
             command.Parameters.AddWithValue("@total", pedido.Total);
@@ -186,7 +185,8 @@ public class PedidoDao
             command.Parameters.AddWithValue("@status", pedido.Status);
             command.Parameters.AddWithValue("@validacao_id_usuario", pedido.ValidacaoIdUsuario);
             command.ExecuteNonQuery();
-            newPedido = ReadAll(command).FirstOrDefault();
+            int id = (int)command.LastInsertedId;
+            pedido.IdPedido = id;
         }
         catch (MySqlException e)
         {
@@ -203,7 +203,7 @@ public class PedidoDao
             _connection.Close();
         }
 
-        return newPedido;
+        return pedido;
     }
 
     public void Update(Pedido pedido)
