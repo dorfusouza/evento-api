@@ -241,7 +241,7 @@ public class IngressoDao
         {
             _connection.Open();
 
-            const string query = "DELETE FROM ingressos WHERE id = @id";
+            const string query = "UPDATE ingressos SET ativo = 0 WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@id", id);
@@ -437,4 +437,59 @@ public class IngressoDao
         return quantidadeIngresso;
     }
 
+    public void DeleteByLoteId(int loteId)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "UPDATE ingressos SET ativo = 0 WHERE lote_id = @lote_id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@lote_id", loteId);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
+    public List<Ingresso?> ReadByLoteId(int loteId)
+    {
+        List<Ingresso?> ingressos;
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT * FROM ingressos WHERE lote_id = @lote_id";
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@lote_id", loteId);
+            ingressos = ReadAll(command);
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return ingressos;
+    }
 }

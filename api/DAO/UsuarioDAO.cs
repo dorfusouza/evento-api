@@ -95,6 +95,8 @@ public class UsuarioDao
         try
         {
             _connection.Open();
+
+
             const string query = "INSERT INTO usuarios (nome_completo, email, senha, telefone, perfil, ativo)" +
                                  "VALUES (@nome_completo, @email, @senha, @telefone, @perfil, @ativo)";
 
@@ -164,7 +166,7 @@ public class UsuarioDao
         try
         {
             _connection.Open();
-            const string query = "DELETE FROM usuarios WHERE id = @id";
+            const string query = "UPDATE usuarios SET ativo = 0 WHERE id = @id";
 
             using var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@id", id);

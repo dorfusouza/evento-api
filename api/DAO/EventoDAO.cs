@@ -16,7 +16,7 @@ public class EventoDao
         using var reader = command.ExecuteReader();
         if (!reader.HasRows) return eventos;
         while (reader.Read())
-        {
+        {   
             var evento = new Evento
             {
                 IdEvento = reader.GetInt32("id"),
@@ -27,8 +27,8 @@ public class EventoDao
                 TotalIngressos = reader.GetInt32("total_ingressos"),
                 Local = reader.GetString("local"),
                 Ativo = reader.GetInt32("ativo"),
-                //Imagem = reader.GetBytes("image")
             };
+            
             eventos.Add(evento);
         }
 
@@ -47,6 +47,8 @@ public class EventoDao
             var command = new MySqlCommand(query, _connection);
 
             eventos = ReadAll(command);
+
+
         }
         catch (MySqlException ex)
         {
@@ -79,6 +81,7 @@ public class EventoDao
             command.Parameters.AddWithValue("@Id", id);
 
             evento = ReadAll(command).FirstOrDefault();
+        
         }
 
         catch (MySqlException ex)
@@ -105,22 +108,31 @@ public class EventoDao
         try
         {
             _connection.Open();
-            const string query = "INSERT INTO evento (id, descricao, data_evento, nome_evento, imagem_url, local, ativo, total_ingressos, image) " +
-                                 "VALUES(@Id,  @Descricao, @DataEvento, @NomeEvento, @ImagemUrl, @Local, @Ativo, @TotalIngressos, @Imagem)";
+            const string query = "INSERT INTO evento (id, descricao, data_evento, nome_evento, imagem_url, local, ativo, total_ingressos) " +
+                                 "VALUES(@Id,  @Descricao, @DataEvento, @NomeEvento, @ImagemUrl, @Local, @Ativo, @TotalIngressos)";
+
+            var ImagemUrl = $"{evento.IdEvento}.png";
 
             using var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@Id", evento.IdEvento);
             command.Parameters.AddWithValue("@Descricao", evento.Descricao);
             command.Parameters.AddWithValue("@DataEvento", evento.DataEvento);
             command.Parameters.AddWithValue("@NomeEvento", evento.NomeEvento);
-            command.Parameters.AddWithValue("@ImagemUrl", evento.ImagemUrl);
+            command.Parameters.AddWithValue("@ImagemUrl", ImagemUrl);
             command.Parameters.AddWithValue("@Local", evento.Local);
             command.Parameters.AddWithValue("@Ativo", evento.Ativo);
             command.Parameters.AddWithValue("@TotalIngressos", evento.TotalIngressos);
-            command.Parameters.AddWithValue("@Imagem", evento.Imagem);
 
             command.ExecuteNonQuery();
             id = (int)command.LastInsertedId;
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "imagens", $"{id}.png");
+            if (evento.Imagem != null)
+            {
+                using var stream = new FileStream(path, FileMode.Create);
+                evento.Imagem.CopyTo(stream);
+            }
+            
         }
         catch (MySqlException ex)
         {
@@ -151,8 +163,7 @@ public class EventoDao
                                  "imagem_url = @ImagemUrl, " +
                                  "local = @Local, " +
                                  "ativo = @Ativo, " +
-                                 "total_ingressos = @TotalIngressos, " +
-                                 "image = @Imagem " +
+                                 "total_ingressos = @TotalIngressos " +
                                  "WHERE id = @Id";
 
             using var command = new MySqlCommand(query, _connection);
@@ -160,14 +171,25 @@ public class EventoDao
             command.Parameters.AddWithValue("@Descricao", evento.Descricao);
             command.Parameters.AddWithValue("@DataEvento", evento.DataEvento);
             command.Parameters.AddWithValue("@NomeEvento", evento.NomeEvento);
-            command.Parameters.AddWithValue("@ImagemUrl", evento.ImagemUrl);
+            command.Parameters.AddWithValue("@ImagemUrl", $"{evento.IdEvento}.png");
             command.Parameters.AddWithValue("@Local", evento.Local);
             command.Parameters.AddWithValue("@Ativo", evento.Ativo);
             command.Parameters.AddWithValue("@TotalIngressos", evento.TotalIngressos);
-            command.Parameters.AddWithValue("@Imagem", evento.Imagem);
             command.Parameters.AddWithValue("@Id", id);
 
             command.ExecuteNonQuery();
+
+            if (evento.Imagem != null)
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(),"imagens", $"{id}.png");
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+
+                using var stream = new FileStream(path, FileMode.Create);
+                evento.Imagem.CopyTo(stream);
+            }
         }
         catch (MySqlException ex)
         {
@@ -190,7 +212,7 @@ public class EventoDao
         try
         {
             _connection.Open();
-            const string query = "DELETE FROM evento WHERE id = @Id";
+            const string query = "UPDATE evento SET ativo = 0 WHERE id = @Id";
 
             using var command = new MySqlCommand(query, _connection);
 

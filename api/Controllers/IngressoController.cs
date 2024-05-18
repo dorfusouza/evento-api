@@ -65,7 +65,7 @@ public class IngressoController : ControllerBase
         if (id != ingresso.IdIngresso) return BadRequest();
         if (_ingressoDao.ReadById(id) == null) return NotFound();
         _ingressoDao.Update(ingresso);
-        return NoContent();
+        return Ok();
     }
 
     [HttpDelete("{id:int}")]
@@ -73,7 +73,7 @@ public class IngressoController : ControllerBase
     {
         if (_ingressoDao.ReadById(id) == null) return NotFound();
         _ingressoDao.Delete(id);
-        return NoContent();
+        return Ok();
     }
 
     [HttpPost("Verifica/{codigo_qr}")]
@@ -129,5 +129,13 @@ public class IngressoController : ControllerBase
         var descricao = _ingressoDao.GetNomeEventoByIdIngresso(id);
         if (descricao == null) return NotFound();
         return Ok(descricao);
+    }
+
+    [HttpDelete("deleteByLoteId/{id:int}")]
+    public IActionResult DeleteByLoteId(int id)
+    {
+        if (_ingressoDao.ReadByLoteId(id) == null) return NotFound();
+        _ingressoDao.DeleteByLoteId(id);
+        return Ok();
     }
 }

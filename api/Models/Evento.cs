@@ -28,6 +28,6 @@ public class Evento
     [Column("nome_evento")]
     public required string NomeEvento { get; set; }
 
-   // [Column("image")]
-    public byte? Imagem { get; set; }
+   [Column("imagem")]
+    public IFormFile? Imagem { get; set; }
 }

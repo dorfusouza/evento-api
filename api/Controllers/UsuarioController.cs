@@ -29,8 +29,14 @@ public class UsuarioController : ControllerBase
     [HttpPost]
     public IActionResult Post(Usuario usuario)
     {
+        //Verifica se o email já está cadastrado
+        if (_usuarioDao.GetEmail(usuario.Email) != null)
+        {
+            return BadRequest("Email já cadastrado");
+        }
         _usuarioDao.Create(usuario);
-        return CreatedAtAction(nameof(ReadById), new { id = usuario.IdUsuario }, usuario);
+
+        return Ok(_usuarioDao.Get().Last());
     }
 
     [HttpPut("{id:int}")]

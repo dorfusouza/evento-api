@@ -343,4 +343,60 @@ public class LoteDao
             _connection.Close();
         }
     }
+
+    public bool CheckExists (int idEvento)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT * FROM lote WHERE evento_id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", idEvento);
+
+            using var reader = command.ExecuteReader();
+            return reader.HasRows;
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
+    public void DeleteByEvento(int idEvento)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "UPDATE lote SET ativo = 0 WHERE evento_id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", idEvento);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
 }
