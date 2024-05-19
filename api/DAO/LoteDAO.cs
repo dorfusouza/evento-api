@@ -399,4 +399,63 @@ public class LoteDao
             _connection.Close();
         }
     }
+
+    public void UpdateAtivo(int idLote, int ativo)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "UPDATE lote SET ativo = @ativo WHERE id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@ativo", ativo);
+            command.Parameters.AddWithValue("@id", idLote);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
+    public Lote GetProximoLote(int idEvento)
+    {
+        Lote? lote;
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT * FROM lote WHERE evento_id = @id AND ativo = 0 ORDER BY data_inicio ASC LIMIT 1";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@id", idEvento);
+
+            lote = ReadAll(command).FirstOrDefault();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return lote;
+    }
 }

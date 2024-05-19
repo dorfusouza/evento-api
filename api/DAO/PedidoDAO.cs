@@ -275,4 +275,37 @@ public class PedidoDao
             _connection.Close();
         }
     }
+
+    public void Cancelar(Pedido pedido)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "UPDATE pedidos SET " +
+                                 "status = @status " +
+                                 "WHERE id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+
+            var status = pedido.Status == "Cancelado" ? "Pendente" : "Cancelado";
+
+            command.Parameters.AddWithValue("@status", status);
+            command.Parameters.AddWithValue("@id", pedido.IdPedido);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
 }

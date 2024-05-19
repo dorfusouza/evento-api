@@ -55,7 +55,22 @@ public class IngressoController : ControllerBase
         }
 
         var lote = _loteDao.GetById(ingressos[0].LoteId);
-        _loteDao.UpdateSaldo(lote.IdLote, ingressosComprados);
+
+        //Se o saldo do lote for 0, o lote é desativado e o próximo lote é ativado se existir
+        if (lote.Saldo == 0)
+        {
+            _loteDao.UpdateAtivo(lote.IdLote, 0);
+            var proximoLote = _loteDao.GetProximoLote(lote.EventoId);
+            if (proximoLote != null)
+            {
+                _loteDao.UpdateAtivo(proximoLote.IdLote, 1);
+            }
+        } 
+        else
+        {
+            _loteDao.UpdateSaldo(lote.IdLote, ingressosComprados);
+        }
+
         return Ok(ingressos);
     }
 
@@ -123,12 +138,12 @@ public class IngressoController : ControllerBase
         return Ok(quantidadePorTipo);
     }
 
-    [HttpGet("descricao/{id:int}")]
-    public IActionResult GetDescricaoEventoByIdIngresso(int id)
+    [HttpGet("nome/{id:int}")]
+    public IActionResult GetNomeEventoByIdIngresso(int id)
     {
-        var descricao = _ingressoDao.GetNomeEventoByIdIngresso(id);
-        if (descricao == null) return NotFound();
-        return Ok(descricao);
+        var nome = _ingressoDao.GetNomeEventoByIdIngresso(id);
+        if (nome == null) return NotFound();
+        return Ok(nome);
     }
 
     [HttpDelete("deleteByLoteId/{id:int}")]
@@ -137,5 +152,21 @@ public class IngressoController : ControllerBase
         if (_ingressoDao.ReadByLoteId(id) == null) return NotFound();
         _ingressoDao.DeleteByLoteId(id);
         return Ok();
+    }
+
+    [HttpPut("status/{id:int}")]
+    public IActionResult PutStatus(int id, string status)
+    {
+        if (_ingressoDao.ReadById(id) == null) return NotFound();
+        _ingressoDao.UpdateStatus(id, status);
+        return Ok(_ingressoDao.ReadById(id));
+    }
+
+    [HttpPut("cancelar/{id:int}")]
+    public IActionResult Cancelar(int id)
+    {
+        if (_ingressoDao.ReadById(id) == null) return NotFound();
+        _ingressoDao.Cancelar(id, true);
+        return Ok(_ingressoDao.ReadById(id));
     }
 }

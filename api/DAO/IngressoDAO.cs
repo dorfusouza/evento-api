@@ -323,11 +323,11 @@ public class IngressoDao
 }   
 
      public string GetNomeEventoByIdIngresso(int ingressoId){
-        string descricaoEvento = "";
+        string nomeEvento = "";
         try
         {
             _connection.Open();
-            const string query = "SELECT evento.descricao " +
+            const string query = "SELECT evento.nome_evento " +
                              "FROM ingressos " +
                              "JOIN lote ON ingressos.lote_id = lote.id " +
                              "JOIN evento ON lote.evento_id = evento.id " +
@@ -338,7 +338,7 @@ public class IngressoDao
             {
                 if (reader.Read())
                 {
-                    descricaoEvento = reader.GetString("descricao");
+                    nomeEvento = reader.GetString("nome_evento");
                 }
             }
     
@@ -358,7 +358,7 @@ public class IngressoDao
             _connection.Close();
         }
 
-        return descricaoEvento;
+        return nomeEvento;
     }
 
     public List<string> GetAllTiposByIdEvento(int id)
@@ -491,5 +491,112 @@ public class IngressoDao
         }
 
         return ingressos;
+    }
+
+    public void UpdateStatus(int id, string status)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "UPDATE ingressos SET status = @status WHERE id = @id";
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@status", status);
+            command.Parameters.AddWithValue("@id", id);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
+    public void Cancelar(int id, bool action)
+    {
+        try
+        {
+            _connection.Open();
+            const string query = "UPDATE ingressos SET ativo = @ativo WHERE id = @id";
+
+            var ativo = action ? 0 : 1;
+
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@ativo", ativo);
+            command.Parameters.AddWithValue("@id", id);
+            command.ExecuteNonQuery();
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+    }
+
+    public Lote GetLoteByIngressoId(int ingressoId)
+    {
+        Lote lote = null!;
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT lote.* FROM ingressos " +
+                                 "JOIN lote ON ingressos.lote_id = lote.id " +
+                                 "WHERE ingressos.id = @Ingresso_Id";
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@Ingresso_Id", ingressoId);
+            using (var reader = command.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    lote = new Lote
+                    {
+                        IdLote = reader.GetInt32("id"),
+                        EventoId = reader.GetInt32("evento_id"),
+                        ValorUnitario = reader.GetDouble("valor_unitario"),
+                        QuantidadeTotal = reader.GetInt32("quantidade_total"),
+                        Saldo = reader.GetInt32("saldo"),
+                        Ativo = reader.GetInt32("ativo"),
+                        DataInicio = reader.GetDateTime("data_inicio"),
+                        DataFinal = reader.GetDateTime("data_final"),
+                        Tipo = reader.GetString("tipo"),
+                        Nome = reader.GetString("nome")
+                    };
+                }
+            }
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return lote;
     }
 }

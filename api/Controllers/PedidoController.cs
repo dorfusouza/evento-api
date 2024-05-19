@@ -5,10 +5,14 @@
 public class PedidoController : ControllerBase
 {
     private readonly PedidoDao _pedidoDao;
+    private readonly IngressoDao _ingressoDao;
+    private readonly LoteDao _loteDao;
 
     public PedidoController()
     {
         _pedidoDao = new PedidoDao();
+        _ingressoDao = new IngressoDao();
+        _loteDao = new LoteDao();
     }
 
     [HttpGet]
@@ -62,7 +66,23 @@ public class PedidoController : ControllerBase
             return BadRequest("Pedido cancelado não pode ser validado");
         }
         _pedidoDao.Validate(pedido);
-        return Ok(_pedidoDao.ReadById(id));
+        pedido = _pedidoDao.ReadById(id);
+        if (pedido.Status == "Validado")
+        {
+            var ingressos = _ingressoDao.ReadByPedidoId(pedido.IdPedido);
+            foreach (var ingresso in ingressos)
+            {
+                _ingressoDao.UpdateStatus(ingresso.IdIngresso, "Validado");
+            }
+        } else if (pedido.Status == "Pendente")
+        {
+            var ingressos = _ingressoDao.ReadByPedidoId(pedido.IdPedido);
+            foreach (var ingresso in ingressos)
+            {
+                _ingressoDao.UpdateStatus(ingresso.IdIngresso, "Pendente");
+            }
+        }
+        return Ok(pedido);
     }
 
 
@@ -72,5 +92,33 @@ public class PedidoController : ControllerBase
         if (_pedidoDao.ReadById(id) == null) return NotFound();
         _pedidoDao.Delete(id);
         return NoContent();
+    }
+
+    [HttpPut("cancelar/{id:int}")]
+    public IActionResult Cancelar(int id, int validacaoIdUsuario)
+    {
+        if (_pedidoDao.ReadById(id) == null) return NotFound();
+        var pedido = _pedidoDao.ReadById(id);
+        if (pedido == null) return NotFound();
+        pedido.ValidacaoIdUsuario = validacaoIdUsuario;
+        _pedidoDao.Cancelar(pedido);
+        // Cancela todos os ingressos e retorna o saldo para o lote
+        var ingressos = _ingressoDao.ReadByPedidoId(pedido.IdPedido);
+        foreach (var ingresso in ingressos)
+        {
+            var lote = _ingressoDao.GetLoteByIngressoId(ingresso.IdIngresso);
+            // Se o ingresso já foi cancelado, ele reverte o cancelamento
+            if (ingresso.Ativo == 0)
+            {
+                _ingressoDao.UpdateStatus(ingresso.IdIngresso, "Pendente");
+                _loteDao.UpdateSaldo(lote.IdLote, 1);
+                _ingressoDao.Cancelar(ingresso.IdIngresso, false);
+                continue;
+            } 
+            _ingressoDao.Cancelar(ingresso.IdIngresso, true);
+            _loteDao.UpdateSaldo(lote.IdLote, -1);
+        }
+
+        return Ok(_pedidoDao.ReadById(id));
     }
 }

@@ -38,7 +38,8 @@ public class EventoController : ControllerBase
         var path = Path.Combine(Directory.GetCurrentDirectory(), "imagens", $"{id}.png");
         if (!System.IO.File.Exists(path))
         {
-            return NotFound();
+            return File(System.IO.File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), "imagens", "default.png")), "image/png");
+        
         }
 
         var image = System.IO.File.OpenRead(path);
@@ -49,16 +50,17 @@ public class EventoController : ControllerBase
     public IActionResult Set(Evento evento)
     {
         _eventoDao.Create(evento);
+        _eventoDao.UpdateTotalIngressos(_eventoDao.Read().Last().IdEvento);
         return Ok(_eventoDao.Read().Last());
     }
 
-    [HttpPut("{id:int}")]
-    public IActionResult Put(int id, Evento evento)
+    [HttpPut]
+    public IActionResult Update(Evento evento)
     {
-        if (id != evento.IdEvento) return BadRequest();
-        if (_eventoDao.ReadById(id) == null) return NotFound();
-        _eventoDao.Update(id, evento);
-        return NoContent();
+        if (_eventoDao.ReadById(evento.IdEvento) == null) return NotFound();
+        _eventoDao.Update(evento);
+        _eventoDao.UpdateTotalIngressos(evento.IdEvento);
+        return Ok(_eventoDao.ReadById(evento.IdEvento));
     }
 
     [HttpDelete("{id:int}")]

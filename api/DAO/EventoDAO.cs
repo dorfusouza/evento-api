@@ -111,21 +111,20 @@ public class EventoDao
             const string query = "INSERT INTO evento (id, descricao, data_evento, nome_evento, imagem_url, local, ativo, total_ingressos) " +
                                  "VALUES(@Id,  @Descricao, @DataEvento, @NomeEvento, @ImagemUrl, @Local, @Ativo, @TotalIngressos)";
 
-            var ImagemUrl = $"{evento.IdEvento}.png";
 
             using var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@Id", evento.IdEvento);
             command.Parameters.AddWithValue("@Descricao", evento.Descricao);
             command.Parameters.AddWithValue("@DataEvento", evento.DataEvento);
             command.Parameters.AddWithValue("@NomeEvento", evento.NomeEvento);
-            command.Parameters.AddWithValue("@ImagemUrl", ImagemUrl);
+            command.Parameters.AddWithValue("@ImagemUrl", $"{evento.IdEvento}.png");
             command.Parameters.AddWithValue("@Local", evento.Local);
             command.Parameters.AddWithValue("@Ativo", evento.Ativo);
             command.Parameters.AddWithValue("@TotalIngressos", evento.TotalIngressos);
 
             command.ExecuteNonQuery();
             id = (int)command.LastInsertedId;
-
+            System.Console.WriteLine(evento.Imagem != null);
             var path = Path.Combine(Directory.GetCurrentDirectory(), "imagens", $"{id}.png");
             if (evento.Imagem != null)
             {
@@ -151,7 +150,7 @@ public class EventoDao
         return id;
     }
 
-    public void Update(int id, Evento evento)
+    public void Update(Evento evento)
     {
         try
         {
@@ -175,13 +174,13 @@ public class EventoDao
             command.Parameters.AddWithValue("@Local", evento.Local);
             command.Parameters.AddWithValue("@Ativo", evento.Ativo);
             command.Parameters.AddWithValue("@TotalIngressos", evento.TotalIngressos);
-            command.Parameters.AddWithValue("@Id", id);
+            command.Parameters.AddWithValue("@Id", evento.IdEvento);
 
             command.ExecuteNonQuery();
 
             if (evento.Imagem != null)
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(),"imagens", $"{id}.png");
+                var path = Path.Combine(Directory.GetCurrentDirectory(),"imagens", $"{evento.IdEvento}.png");
                 if (File.Exists(path))
                 {
                     File.Delete(path);
