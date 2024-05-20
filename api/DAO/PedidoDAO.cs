@@ -83,6 +83,10 @@ public class PedidoDao
             } else if (pedido.Status == "Pendente")
             {
                 Status = "Validado";
+            } else if (pedido.Status == "Cancelado")
+            {
+                Status = "Cancelado";
+                pedido.ValidacaoIdUsuario = 0;
             }
 
             command.Parameters.AddWithValue("@status", Status);
@@ -282,14 +286,25 @@ public class PedidoDao
         {
             _connection.Open();
             const string query = "UPDATE pedidos SET " +
-                                 "status = @status " +
+                                 "status = @status, " +
+                                 "validacao_id_usuario = @validacao_id_usuario " +
                                  "WHERE id = @id";
 
             var command = new MySqlCommand(query, _connection);
 
-            var status = pedido.Status == "Cancelado" ? "Pendente" : "Cancelado";
+            var status = "";
+            if (pedido.Status == "Cancelado")
+            {
+                pedido.ValidacaoIdUsuario = 0;
+                status = "Pendente";
+            } else
+            {
+                status = "Cancelado";
+            }
+            
 
             command.Parameters.AddWithValue("@status", status);
+            command.Parameters.AddWithValue("@validacao_id_usuario", pedido.ValidacaoIdUsuario);
             command.Parameters.AddWithValue("@id", pedido.IdPedido);
             command.ExecuteNonQuery();
         }

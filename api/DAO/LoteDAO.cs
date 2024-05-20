@@ -269,13 +269,13 @@ public class LoteDao
         }
     }
 
-    public List<List<int>> GetQuantidadeIngressos(int id)
+    public List<List<Lote>> GetQuantidadeIngressos(int id)
     {
-        List<List<int>> quantidadeIngressos = new();
+        List<List<Lote>> lotes = new List<List<Lote>>();
         try
         {
             _connection.Open();
-            const string query = "SELECT lote.id, lote.quantidade_total, lote.saldo, COUNT(ingressos.id) as vendidos " +
+            const string query = "SELECT * " +
                                  "FROM lote " +
                                  "LEFT JOIN ingressos ON lote.id = ingressos.lote_id " +
                                  "WHERE lote.evento_id = @id " +
@@ -285,18 +285,34 @@ public class LoteDao
             command.Parameters.AddWithValue("@id", id);
 
             using var reader = command.ExecuteReader();
-            if (!reader.HasRows) return quantidadeIngressos;
+            if (!reader.HasRows) return lotes;
+
             while (reader.Read())
             {
-                var lote = new List<int>
+                var lote = new Lote
                 {
-                    reader.GetInt32("id"),
-                    reader.GetInt32("quantidade_total"),
-                    reader.GetInt32("saldo"),
-                    reader.GetInt32("vendidos"),
+                    IdLote = reader.GetInt32("id"),
+                    EventoId = reader.GetInt32("evento_id"),
+                    ValorUnitario = reader.GetDouble("valor_unitario"),
+                    QuantidadeTotal = reader.GetInt32("quantidade_total"),
+                    Saldo = reader.GetInt32("saldo"),
+                    Ativo = reader.GetInt32("ativo"),
+                    DataFinal = reader.GetDateTime("data_final"),
+                    DataInicio = reader.GetDateTime("data_inicio"),
+                    Tipo = reader.GetString("tipo"),
+                    Nome = reader.GetString("nome")
                 };
-                quantidadeIngressos.Add(lote);
+
+                var ingressos = new List<Lote>
+                {
+                    lote
+                };
+
+                lotes.Add(ingressos);
             }
+            
+
+            
         }
         catch (MySqlException e)
         {
@@ -313,7 +329,7 @@ public class LoteDao
             _connection.Close();
         }
 
-        return quantidadeIngressos;
+        return lotes;
     }
 
     public void UpdateSaldo(int idLote, int quantidade)
@@ -321,8 +337,7 @@ public class LoteDao
         try
         {
             _connection.Open();
-            const string query = "UPDATE lote SET saldo = saldo - @quantidade WHERE id = @id";
-
+            const string query = "UPDATE lote SET saldo = saldo - @quantidade WHERE id = @id AND saldo - @quantidade >= 0";
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@quantidade", quantidade);
             command.Parameters.AddWithValue("@id", idLote);
@@ -427,35 +442,68 @@ public class LoteDao
             _connection.Close();
         }
     }
+    
 
-    public Lote GetProximoLote(int idEvento)
+    public void UpdateAtivosLotes(int idEvento)
     {
-        Lote? lote;
         try
         {
-            _connection.Open();
-            const string query = "SELECT * FROM lote WHERE evento_id = @id AND ativo = 0 ORDER BY data_inicio ASC LIMIT 1";
+            List<Lote> lotes = GetByEventoId(idEvento);
+            int loteAtivoIndex = -1;
+            int primeiroLoteComSaldoIndex = -1;
 
-            var command = new MySqlCommand(query, _connection);
-            command.Parameters.AddWithValue("@id", idEvento);
+            // Encontrar o índice do lote ativo e o índice do primeiro lote com saldo
+            for (int i = 0; i < lotes.Count; i++)
+            {
+                if (lotes[i].Ativo == 1)
+                {
+                    loteAtivoIndex = i;
+                }
 
-            lote = ReadAll(command).FirstOrDefault();
+                if (lotes[i].Saldo > 0 && primeiroLoteComSaldoIndex == -1)
+                {
+                    primeiroLoteComSaldoIndex = i;
+                }
+
+                // Se ambos os índices foram encontrados, podemos parar a busca
+                if (loteAtivoIndex != -1 && primeiroLoteComSaldoIndex != -1)
+                {
+                    break;
+                }
+            }
+
+            if (loteAtivoIndex != -1)
+            {
+                if (primeiroLoteComSaldoIndex == -1)
+                {
+                    // Não há lote com saldo, desativar o lote ativo atual
+                    UpdateAtivo(lotes[loteAtivoIndex].IdLote, 0);
+                }
+                else
+                {
+                    // Desativar o lote ativo atual e ativar o primeiro lote com saldo
+                    UpdateAtivo(lotes[loteAtivoIndex].IdLote, 0);
+                    UpdateAtivo(lotes[primeiroLoteComSaldoIndex].IdLote, 1);
+                }
+            }
+            else
+            {
+                // Desativar lotes sem saldo se não houver lote ativo
+                foreach (var lote in lotes)
+                {
+                    if (lote.Saldo == 0 && lote.Ativo != 0)
+                    {
+                        UpdateAtivo(lote.IdLote, 0);
+                    }
+                }
+            }
         }
-        catch (MySqlException e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Ocorreu um erro ao atualizar os lotes ativos: " + ex.Message);
             throw;
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-        finally
-        {
-            _connection.Close();
-        }
-
-        return lote;
     }
+
+
 }

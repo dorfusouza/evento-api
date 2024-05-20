@@ -93,6 +93,37 @@ public class IngressoDao
         return ingressos;
     }
 
+    public List<Ingresso?> ReadByEventoId(int eventoId)
+    {
+        List<Ingresso?> ingressos;
+        try
+        {
+            _connection.Open();
+            const string query = "SELECT * FROM ingressos " +
+                                 "JOIN lote ON ingressos.lote_id = lote.id " +
+                                 "WHERE lote.evento_id = @evento_id";
+            var command = new MySqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@evento_id", eventoId);
+            ingressos = ReadAll(command);
+        }
+        catch (MySqlException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            _connection.Close();
+        }
+
+        return ingressos;
+    }
+
     public List<Ingresso?> ReadByUsuarioId(int usuarioId)
     {
         List<Ingresso?> ingressos;
@@ -159,7 +190,6 @@ public class IngressoDao
         {
             String codeQR = Guid.NewGuid().ToString();
             ingresso.CodigoQr = codeQR.Substring(0,5) + "@792@" + codeQR.Substring(5);
-            Console.WriteLine(ingresso.CodigoQr);
 
             _connection.Open();
             const string query = "INSERT INTO ingressos (lote_id, pedidos_id, pedidos_usuarios_id, status, tipo, data_utilizacao, valor, codigo_qr, ativo) " +

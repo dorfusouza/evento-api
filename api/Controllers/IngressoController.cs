@@ -56,19 +56,11 @@ public class IngressoController : ControllerBase
 
         var lote = _loteDao.GetById(ingressos[0].LoteId);
 
-        //Se o saldo do lote for 0, o lote é desativado e o próximo lote é ativado se existir
-        if (lote.Saldo == 0)
+        if (lote != null)
         {
-            _loteDao.UpdateAtivo(lote.IdLote, 0);
-            var proximoLote = _loteDao.GetProximoLote(lote.EventoId);
-            if (proximoLote != null)
-            {
-                _loteDao.UpdateAtivo(proximoLote.IdLote, 1);
-            }
-        } 
-        else
-        {
-            _loteDao.UpdateSaldo(lote.IdLote, ingressosComprados);
+            lote.Saldo -= ingressosComprados;
+            _loteDao.Update(lote);
+            _loteDao.UpdateAtivosLotes(lote.EventoId);
         }
 
         return Ok(ingressos);
@@ -135,7 +127,7 @@ public class IngressoController : ControllerBase
             var quantidade = _ingressoDao.CountIngressoByTipo(tipo);
             quantidadePorTipo.Add(tipo, quantidade);
         }
-        return Ok(quantidadePorTipo);
+        return Ok(new { quantidadePorTipo, ingressos = _ingressoDao.ReadByEventoId(id) });
     }
 
     [HttpGet("nome/{id:int}")]
