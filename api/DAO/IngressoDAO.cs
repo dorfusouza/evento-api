@@ -560,7 +560,7 @@ public class IngressoDao
         try
         {
             _connection.Open();
-            const string query = "UPDATE ingressos SET ativo = @ativo WHERE id = @id";
+            const string query = "UPDATE ingressos SET status = 'Cancelado', ativo = @ativo WHERE id = @id";
 
             var ativo = action ? 0 : 1;
 
