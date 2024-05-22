@@ -562,10 +562,10 @@ public class IngressoDao
             _connection.Open();
             const string query = "UPDATE ingressos SET status = 'Cancelado', ativo = @ativo WHERE id = @id";
 
-            var ativo = action ? 0 : 1;
+            //var ativo = action ? 0 : 1;
 
             var command = new MySqlCommand(query, _connection);
-            command.Parameters.AddWithValue("@ativo", ativo);
+            command.Parameters.AddWithValue("@ativo", 0);
             command.Parameters.AddWithValue("@id", id);
             command.ExecuteNonQuery();
         }
