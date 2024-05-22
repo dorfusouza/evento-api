@@ -449,51 +449,17 @@ public class LoteDao
         try
         {
             List<Lote> lotes = GetByEventoId(idEvento);
-            int loteAtivoIndex = -1;
-            int primeiroLoteComSaldoIndex = -1;
 
-            // Encontrar o índice do lote ativo e o índice do primeiro lote com saldo
+            // Se o lote ativo tiver saldo == 0, ele é desativado
+            // E o próximo lote ativo é ativado
             for (int i = 0; i < lotes.Count; i++)
             {
-                if (lotes[i].Ativo == 1)
+                if (lotes[i].Ativo == 1 && lotes[i].Saldo == 0)
                 {
-                    loteAtivoIndex = i;
-                }
-
-                if (lotes[i].Saldo > 0 && primeiroLoteComSaldoIndex == -1)
-                {
-                    primeiroLoteComSaldoIndex = i;
-                }
-
-                // Se ambos os índices foram encontrados, podemos parar a busca
-                if (loteAtivoIndex != -1 && primeiroLoteComSaldoIndex != -1)
-                {
-                    break;
-                }
-            }
-
-            if (loteAtivoIndex != -1)
-            {
-                if (primeiroLoteComSaldoIndex == -1)
-                {
-                    // Não há lote com saldo, desativar o lote ativo atual
-                    UpdateAtivo(lotes[loteAtivoIndex].IdLote, 0);
-                }
-                else
-                {
-                    // Desativar o lote ativo atual e ativar o primeiro lote com saldo
-                    UpdateAtivo(lotes[loteAtivoIndex].IdLote, 0);
-                    UpdateAtivo(lotes[primeiroLoteComSaldoIndex].IdLote, 1);
-                }
-            }
-            else
-            {
-                // Desativar lotes sem saldo se não houver lote ativo
-                foreach (var lote in lotes)
-                {
-                    if (lote.Saldo == 0 && lote.Ativo != 0)
+                    UpdateAtivo(lotes[i].IdLote, 0);
+                    if (i + 1 < lotes.Count)
                     {
-                        UpdateAtivo(lote.IdLote, 0);
+                        UpdateAtivo(lotes[i + 1].IdLote, 1);
                     }
                 }
             }
@@ -504,6 +470,8 @@ public class LoteDao
             throw;
         }
     }
+
+
 
 
 }
