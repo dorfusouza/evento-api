@@ -211,7 +211,7 @@ public class EventoDao
         try
         {
             _connection.Open();
-            const string query = "UPDATE evento SET ativo = 0 WHERE id = @Id";
+            const string query = "DELETE FROM evento WHERE id = @Id";
 
             using var command = new MySqlCommand(query, _connection);
 

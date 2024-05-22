@@ -68,12 +68,18 @@ public class EventoController : ControllerBase
     {
         if (_eventoDao.ReadById(id) == null) return NotFound();
         if (_loteDao.CheckExists(id)) {
-            _ingressoDao.DeleteByLoteId(id);
-
-            //Iremos deletar todos os lotes
+            var lotes = _loteDao.GetByEventoId(id);
+            foreach (var lote in lotes)
+            {
+                var loteId = lote.IdLote;
+                _ingressoDao.DeleteByLoteId(loteId);
+                System.Console.WriteLine($"Lote {loteId} deletado");;
+            }
+            System.Console.WriteLine($"Lotes deletados");
             _loteDao.DeleteByEvento(id);
         }
         _eventoDao.Delete(id);
-        return Ok();
+        System.Console.WriteLine($"Evento {id} deletado");
+        return Ok("Evento deletado com sucesso");
     }
 }

@@ -59,17 +59,18 @@ public class LoteController : ControllerBase
     public IActionResult Delete(int id)
     {
         if (_loteDao.GetById(id) == null) return NotFound();
+        var lote = _loteDao.GetById(id);
         _loteDao.Delete(id);
-        _eventoDao.UpdateTotalIngressos(_loteDao.GetById(id).EventoId);
-        return NoContent();
+        _eventoDao.UpdateTotalIngressos(lote.EventoId);
+        return Ok("Lote deletado com sucesso");
     }
 
     [HttpDelete("evento/{id:int}")]
     public IActionResult DeleteByEventoId(int id)
     {
         _loteDao.DeleteByEventoId(id);
-        _eventoDao.UpdateTotalIngressos(0);
-        return NoContent();
+        _eventoDao.UpdateTotalIngressos(id);
+        return Ok();
     }
 
     [HttpGet("quantidadeIngressos/{id:int}")]

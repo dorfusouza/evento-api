@@ -476,7 +476,7 @@ public class IngressoDao
         try
         {
             _connection.Open();
-            const string query = "UPDATE ingressos SET ativo = 0 WHERE lote_id = @lote_id";
+            const string query = "DELETE FROM ingressos WHERE lote_id = @lote_id";
 
             var command = new MySqlCommand(query, _connection);
             command.Parameters.AddWithValue("@lote_id", loteId);
